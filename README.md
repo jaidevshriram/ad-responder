@@ -1,166 +1,133 @@
 # The Ad That Listens
 
-A travel ad you can interrupt. A show plays on NotFlix, a Netflix-style streaming
-app. At the ad break, a live AI-generated world of the Amalfi Coast plays with a
-scripted narration. Hold Space and ask it something. The narration stops, a voice
-agent answers in the same voice, and the picture changes to show you.
+Ask a TV ad a question out loud. It answers you in its own voice, and the picture
+changes to show you.
 
-![The Hilton Amalfi Coast ad answering a price question, with a fact card](docs/screenshots/13-answer.webp)
+**[Watch the demo](https://jaidevshriram.com/ad-responder/)**: a full ad break, 3½ minutes, with sound.
+The video is also in the repo as [`docs/demo.mp4`](docs/demo.mp4).
 
-**[Watch the demo](https://jaidevshriram.com/ad-responder/)** (3½ minutes, with sound) on the project page, or download [`docs/demo.mp4`](docs/demo.mp4).
+![The ad answering "How much is it for three nights?", with the price on a card](docs/screenshots/13-answer.webp)
 
-## What happens
+## What it does
 
-**1. A show is playing.** NotFlix plays Big Buck Bunny (Blender Foundation, CC BY 3.0).
+You're watching a show in NotFlix, a Netflix-style app. An ad comes on: a made-up
+Hilton stay on the Amalfi Coast, with a narrator over live, AI-generated video.
 
-| Home | Watching |
+Hold the space bar and ask it something. The narrator stops and the answer comes back
+in the same voice, with a card for any number worth seeing. The video moves to show
+what you asked about. When you're done, the ad finishes and the show picks up where
+it left off.
+
+| "What's it like there at night?" | A few seconds later |
 |---|---|
-| ![NotFlix home page](docs/screenshots/01-home-960.webp) | ![The player](docs/screenshots/03-watching-960.webp) |
-
-**2. The ad gets ready in the background.** While the show plays, the app opens a
-world-model session and the voice agent. **Start the ad** lights up only when the
-world is already streaming, so the break never shows a loading screen.
-
-![The player with the Start the ad button](docs/screenshots/05-ready-960.webp)
-
-**3. The ad break.** The show eases away, a bumper says the ad listens, and the live
-world fades in. Sixteen narration lines, about two minutes, each with its own shot.
-
-| Bumper | Narration |
-|---|---|
-| ![Ad bumper](docs/screenshots/07-bumper-960.webp) | ![Inside the Hilton lobby, with a subtitle](docs/screenshots/08-narration-960.webp) |
-
-**4. You ask.** Hold Space (or the on-screen button) and speak. The narration stops,
-your words appear, and the ad answers out loud, with a fact card when there is a
-number to show.
-
-| "How much is it for three nights?" | Then a sea-view room |
-|---|---|
-| ![Price answer with a card](docs/screenshots/13-answer.webp) | ![Sea-view room](docs/screenshots/14-price-scene-960.webp) |
-
-**5. Every answer moves the picture.** The agent sends the world model a new shot
-with each answer. It lands in 4–8 seconds, while the answer is still being spoken.
-
-| "What's it like there at night?" | Seconds later |
-|---|---|
-| ![Asked on the coast road in daylight](docs/screenshots/16-night-question-960.webp) | ![The harbour at dusk, lights on](docs/screenshots/19-night-later-960.webp) |
-
-| "Do you provide transport?" | Then the coast road |
-|---|---|
-| ![Transport answer with a card](docs/screenshots/21-transport-answer-960.webp) | ![The convertible on the coast road](docs/screenshots/22-transport-scene-960.webp) |
-
-**6. Back to the show.** When the script ends and nobody is talking, an end card
-shows, and the show resumes where it stopped.
-
-| End card | Back to the show |
-|---|---|
-| ![End card](docs/screenshots/27-end-card-960.webp) | ![Big Buck Bunny again](docs/screenshots/28-back-to-show-960.webp) |
-
-## How it works
-
-```
- Mac microphone ──► voice relay (Python) ──► AssemblyAI Voice Agent
- Mac speakers   ◄──      │      ▲                 │ spoken answer + tool calls
-                         │      └─────────────────┘
-                         ▼ WebSocket (localhost:8765)
-                    NotFlix (Next.js) ──► Reactor HappyOyster ──► live video
-```
-
-- **Voice relay** (`voice/relay.py`) owns all audio. It plays the narration, streams
-  the microphone to the Voice Agent while you hold Space, plays the answers, and
-  forwards the agent's tool calls to the browser.
-- **AssemblyAI Voice Agent** hears the question and answers out loud. It has tools
-  to look up hotel details, price a stay, check availability, change the scene,
-  show a fact card and hand back to the ad.
-- **Reactor HappyOyster** is a world model that streams live video. The browser
-  sends it a short shot direction ("night falls over the harbour…") and the world
-  moves there.
-- **Push to talk.** A laptop has no echo cancelling, so an open mic would hear the
-  ad and answer itself. The mic is open only while you hold Space.
-
-The browser ⇄ relay messages are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
+| ![Daytime on a coast road, with the question on screen](docs/screenshots/16-night-question-960.webp) | ![The harbour at dusk with the lights coming on](docs/screenshots/19-night-later-960.webp) |
 
 ## Run it on a Mac
 
-You need macOS, Node.js 20+, Python 3.11+, and two API keys:
+You need Node.js 20+, Python 3.11+, and API keys for
 [AssemblyAI](https://www.assemblyai.com/) and [Reactor](https://reactor.inc/).
 
 ```bash
 git clone git@github.com:jaidevshriram/ad-responder.git
 cd ad-responder
 npm install
-npm run setup:voice                      # Python venv in .venv for the relay
+npm run setup:voice                      # creates .venv for the voice relay
 
-cp .env.example .env.local               # add REACTOR_API_KEY
+cp .env.example .env.local               # add your REACTOR_API_KEY
 echo "ASSEMBLYAI_API_KEY=your-key" > voice/.env
 ```
 
-Start the two parts in two terminals:
+Then, in two terminals:
 
 ```bash
-npm run relay        # voice relay: mic, speakers, voice agent
+npm run relay        # the voice side: mic, speakers, voice agent
 ```
 
 ```bash
-npm run dev          # NotFlix on http://localhost:3000
+npm run dev          # the app, on http://localhost:3000
 ```
 
-Open http://localhost:3000/notflix. The first time, macOS asks whether your
-terminal may use the microphone: allow it.
+Open http://localhost:3000/notflix. The first time, macOS asks whether your terminal
+may use the microphone; allow it.
 
 1. Click **Play** on Big Buck Bunny.
-2. Move the mouse and click **Prepare ad**. Wait about 20 seconds.
+2. Click **Prepare ad**, and wait for it to become **Start the ad** (about 20 seconds).
 3. Click **Start the ad**.
-4. Hold **Space**, ask a question, release. Try:
+4. Hold **Space**, ask a question, let go. For example:
    - "How much is it for three nights?"
    - "Do you provide transport?"
    - "What's it like there at night?"
-   - "What places are there nearby?"
    - "OK, carry on."
 
-The first run builds the Amalfi world, which takes about two minutes. Its id is
-saved in `data/ad-world.json` and reused after that.
+The very first run also builds the ad's video world, which takes about two minutes.
+It's saved and reused after that.
 
-| Key | What it does |
+| Key | Does |
 |---|---|
 | Space (hold) | Talk to the ad |
 | Esc | Skip the ad |
-| D | Audio check panel: devices, levels, speaker and mic tests |
-| A | Start the ad break now |
+| D | Audio check: devices, levels, speaker and mic tests |
+| A | Start the ad break right away |
 
-If the mic does not work, tap the question chips along the bottom of the ad.
+If the mic doesn't work, tap the suggested questions along the bottom of the ad.
 
-| Hold to talk | Audio check (D) |
-|---|---|
-| ![Hold Space to ask](docs/screenshots/24-hold-to-talk-960.webp) | ![Audio check panel](docs/screenshots/25-audio-panel-960.webp) |
+## How it's built
+
+```
+ Mac mic ──► voice relay (Python) ──► AssemblyAI Voice Agent
+ speakers ◄──     │     ▲                   │ answers + tool calls
+                  │     └───────────────────┘
+                  ▼ local WebSocket
+            NotFlix (Next.js) ──► Reactor HappyOyster ──► live video
+```
+
+- **Voice relay** (`voice/relay.py`) handles all the sound: it plays the narrator,
+  sends your voice to the agent while you hold Space, plays the answers, and passes
+  the agent's requests on to the app.
+- **AssemblyAI Voice Agent** hears the question and answers out loud. Its tools look
+  up hotel details, price a stay, check availability, change the scene, put a card on
+  screen, and hand back to the narrator.
+- **Reactor HappyOyster** generates the ad's video live and follows short written
+  directions as it plays, like "night falls over the harbour". The project page
+  explains [how we got it to follow reliably](https://jaidevshriram.com/ad-responder/#reactor).
+- **NotFlix** (Next.js) shows the film, the ad, the captions and the cards. It starts
+  the ad's video in the background while the show is playing, so the break never
+  shows a loading screen.
+
+You hold Space because a laptop has no echo cancelling: an open mic hears the ad and
+the ad starts answering itself. A mic array that cancels its own playback, such as a
+reSpeaker XVF3800, is picked up automatically when plugged in, and then the mic stays
+open.
+
+The messages between the relay and the app are listed in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
 
 ## Change the ad
 
-Everything the agent knows is in [`voice/ad_script.json`](voice/ad_script.json):
-the narration lines and the shot for each, the facts, the question chips and the
-world prompt. The relay reads it again at the start of every ad. After changing a
-narration line, record it again:
+The whole ad lives in [`voice/ad_script.json`](voice/ad_script.json): the narration
+lines with a shot for each, the facts the agent knows, the suggested questions, and
+the description of the video world. The relay reads it again at the start of every ad.
+After editing a narration line, record it again:
 
 ```bash
 .venv/bin/python voice/make_narration.py --all
 ```
 
-Prices, availability and the fallback scenes are in `voice/relay.py`.
+Prices, availability and the fallback shots are in `voice/relay.py`.
 
 ## Files
 
-| path | what it is |
+| Path | What it is |
 |---|---|
 | `app/notflix`, `components/` | the streaming app, the player and the ad break |
-| `app/ad-lab` | developer page for the HappyOyster world |
-| `app/api/happy-oyster/` | opens HappyOyster sessions server-side; stores the world id |
 | `voice/relay.py` | the voice relay |
-| `voice/ad_script.json` | the ad: narration, shots, facts, question chips |
+| `voice/ad_script.json` | the ad: narration, shots, facts, suggested questions |
 | `voice/test_relay.py` | end-to-end test with synthesized questions, no sound |
+| `app/api/happy-oyster/` | opens Reactor sessions on the server and stores the world id |
+| `app/ad-lab` | developer page for trying directions on the video world |
+| `docs/` | the project page (GitHub Pages), screenshots and the demo video |
 
 ## Notes
 
-- Hilton Amalfi Coast, its prices and its facts are fictional, written for this demo.
-- A reSpeaker XVF3800 mic array works too and is picked up automatically when
-  plugged in. It cancels its own playback, so the mic can stay open and you can
-  interrupt without holding Space.
+- The Hilton stay, its prices and its details are made up for this demo; Hilton isn't
+  involved.
+- Big Buck Bunny © Blender Foundation, CC BY 3.0.
