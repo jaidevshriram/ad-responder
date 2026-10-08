@@ -33,7 +33,8 @@ export type RelayOut =
   | { type: "ad.stop" }
   | { type: "test.speaker" }
   | { type: "test.mic"; seconds?: number }
-  | { type: "scene.done"; direction: string };
+  | { type: "scene.done"; direction: string }
+  | { type: "ask"; text: string };
 
 export type RelayLogEntry = { at: number; dir: "in" | "out"; text: string };
 

@@ -431,6 +431,22 @@ export function AdBreak({
             ))}
           </div>
 
+          {phase === "world" && (
+            <div className="ad-asks" aria-label="Ask the ad">
+              {(adScript.suggestions ?? []).map((question) => (
+                <button
+                  key={question}
+                  type="button"
+                  className="ad-ask"
+                  disabled={Boolean(convo && !convo.leaving)}
+                  onClick={() => relaySend({ type: "ask", text: question })}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="ad-captions" aria-live="polite">
             {subtitle && !convo && (
               <p key={subtitle.key} className="ad-subtitle">

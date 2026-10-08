@@ -12,6 +12,7 @@ export const adScript = script as {
   world_prompt: string;
   beats: AdBeat[];
   facts: Record<string, string>;
+  suggestions?: string[];
 };
 
 /** Gap the relay leaves between narration lines, and its wait after the last. */

@@ -845,6 +845,11 @@ class Relay:
             asyncio.create_task(self.test_mic(m.get("seconds") or 4))
         elif t == "scene.done":
             pass
+        elif t == "ask":
+            # Fallback for a dead mic: speak the tapped question into the agent,
+            # exactly as if the viewer had said it. Everything downstream (tools,
+            # scene, card, captions) runs unchanged.
+            asyncio.create_task(self.ask(str(m.get("text", "")).strip()))
         elif t == "debug.mute_mic":
             self.mic_muted = bool(m.get("mute", True))
         elif t == "debug.inject_audio":
@@ -852,6 +857,24 @@ class Relay:
             pcm += bytes((-len(pcm)) % (CHUNK * 2))
             self.inject.extend(pcm[i:i + CHUNK * 2] for i in range(0, len(pcm), CHUNK * 2))
             self.log("<- debug.inject_audio", seconds=round(len(pcm) / 2 / RATE, 2))
+
+    async def ask(self, text: str):
+        if not text:
+            return
+        self.ensure_agent()
+        tmp = HERE / "narration" / "_ask"
+        proc = await asyncio.create_subprocess_exec(
+            "say", "-v", "Samantha", "-o", f"{tmp}.aiff", text)
+        await proc.wait()
+        proc = await asyncio.create_subprocess_exec(
+            "afconvert", "-f", "WAVE", "-d", f"LEI16@{RATE}", "-c", "1", f"{tmp}.aiff", f"{tmp}.wav")
+        await proc.wait()
+        with wave.open(f"{tmp}.wav") as w:
+            pcm = w.readframes(w.getnframes())
+        pcm += bytes(int(1.6 * RATE) * 2)            # silence so the turn closes
+        pcm += bytes((-len(pcm)) % (CHUNK * 2))
+        self.inject.extend(pcm[i:i + CHUNK * 2] for i in range(0, len(pcm), CHUNK * 2))
+        self.log("ask", text=text, seconds=round(len(pcm) / 2 / RATE, 2))
 
     async def main(self):
         self.loop = asyncio.get_running_loop()

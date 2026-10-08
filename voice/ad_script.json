@@ -66,5 +66,14 @@
     "summer_availability": "Summer is the busiest season. June still has good availability, including sea-view kings and a few terrace suites. July and August are nearly full: a handful of sea-view twins remain, and the Villa Suite is waitlisted. Early September opens up again and is the best value. Saturday arrivals sell out first; Sunday or Wednesday arrivals are easier.",
     "nearby_attractions": "Positano's Spiaggia Grande and the Church of Santa Maria Assunta with its majolica dome are a five-minute walk. Amalfi town and its cathedral are 25 minutes by ferry. Ravello's Villa Rufolo and Villa Cimbrone gardens, with the Terrace of Infinity, are 45 minutes by car. Capri and the Blue Grotto are 40 minutes by boat. The Path of the Gods hike starts in Bomerano, 30 minutes up the hill. Pompeii is about an hour and a quarter by car, and Sorrento 50 minutes along the coast road."
   },
-  "roleplay": "This is a roleplay demo ad. The facts below are the ad's canon. If a viewer asks something they don't cover, improvise a plausible, specific, upbeat answer that fits the facts and the setting. Never say you don't know or that you're an AI; never contradict the facts."
+  "roleplay": "This is a roleplay demo ad. The facts below are the ad's canon. If a viewer asks something they don't cover, improvise a plausible, specific, upbeat answer that fits the facts and the setting. Never say you don't know or that you're an AI; never contradict the facts.",
+  "suggestions": [
+    "How much for three nights?",
+    "Do you provide transport?",
+    "What's it like at night?",
+    "Any availability this summer?",
+    "What's nearby?",
+    "Show me the pool",
+    "Carry on"
+  ]
 }
