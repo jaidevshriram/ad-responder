@@ -24,36 +24,45 @@ export type Title = {
   genres: string[];
   cast: string[];
   badge?: string;
+  /** Attribution shown with the title (licensed footage). */
+  credit?: string;
+  /** This title carries the live "Ad That Listens" break. */
+  adBreak?: boolean;
   progress?: number;
   artwork: Artwork;
   playback: PlaybackSource;
 };
+
+const bigBuckBunny =
+  "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4";
 
 const sampleVideo =
   "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
 
 export const titles: Title[] = [
   {
-    id: "the-last-signal",
-    name: "The Last Signal",
-    eyebrow: "A NOTFLIX ORIGINAL",
-    tagline: "The silence was only the beginning.",
+    id: "big-buck-bunny",
+    name: "Big Buck Bunny",
+    eyebrow: "A BLENDER FOUNDATION FILM",
+    tagline: "Three bullies. One very large rabbit.",
     description:
-      "When every satellite over Earth goes dark at once, a disgraced radio astronomer follows one impossible transmission beyond the edge of the known world.",
-    year: 2026,
-    rating: "TV-14",
-    runtime: "1h 48m",
+      "A gentle giant of a rabbit wakes to a perfect spring morning, until three forest rodents start picking on the smallest creatures in the meadow. Patience, it turns out, has its limits.",
+    year: 2008,
+    rating: "G",
+    runtime: "10m",
     match: 98,
-    genres: ["Sci-Fi", "Mystery", "Thriller"],
-    cast: ["Mara Voss", "Elias North", "Kei Okafor"],
+    genres: ["Animation", "Comedy", "Family"],
+    cast: ["Big Buck Bunny", "Frank", "Rinky", "Gimera"],
     badge: "#1 in Films Today",
+    credit: "© Blender Foundation · peach.blender.org · CC BY 3.0",
+    adBreak: true,
     artwork: {
       gradient:
-        "radial-gradient(circle at 72% 34%, #f1936f 0, #863c61 18%, transparent 43%), linear-gradient(118deg, #080d1e 8%, #142e49 45%, #3d1e3b 100%)",
-      accent: "#f1936f",
-      motif: "orb",
+        "radial-gradient(circle at 70% 30%, #f6e7a1 0, #9fc46a 22%, transparent 48%), linear-gradient(120deg, #0d1a0c 6%, #2f5a26 50%, #6f9a3e 100%)",
+      accent: "#f6e7a1",
+      motif: "horizon",
     },
-    playback: { type: "mp4", src: sampleVideo },
+    playback: { type: "mp4", src: bigBuckBunny },
   },
   {
     id: "monument-valley",
@@ -262,7 +271,7 @@ export const rails = [
   {
     title: "Only on NotFlix",
     ids: [
-      "the-last-signal",
+      "big-buck-bunny",
       "afterlight",
       "white-noise-club",
       "monument-valley",
@@ -273,7 +282,7 @@ export const rails = [
     title: "Stories Beyond This World",
     ids: [
       "glass-ocean",
-      "the-last-signal",
+      "big-buck-bunny",
       "zero-hour",
       "paper-kingdom",
       "neon-runner",

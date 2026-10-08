@@ -904,7 +904,6 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  cursor: none;
 }
 .player-vignette {
   position: absolute;
@@ -1189,9 +1188,11 @@ a {
   opacity: 1;
 }
 
-.controls-hidden,
-.controls-hidden .player-video {
-  cursor: none;
+/* The cursor hides only while the pointer is idle during playback; any
+   movement brings it back (see VideoPlayer: idle / cursor-hidden). */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
 }
 
 .player-vignette {

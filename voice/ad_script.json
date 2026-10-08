@@ -1,6 +1,6 @@
 {
-  "brand": "Meridian",
-  "title": "Amalfi, slowly",
+  "brand": "Hilton",
+  "title": "Hilton Amalfi Coast",
   "voice": "vera",
   "world_prompt": "The Amalfi Coast in Italy on a bright summer morning. Pastel houses stacked up a steep cliff above a turquoise bay, lemon trees on terraces, small wooden boats in the harbour, a winding coastal road. Cinematic travel film, warm golden light, slow graceful camera.",
   "beats": [
@@ -11,38 +11,58 @@
     },
     {
       "id": "b2",
-      "line": "Where mornings begin with lemons, and the smell of the sea.",
-      "scene": "The camera drifts gently along a terrace of lemon trees, sunlight through the leaves, the sea glittering below."
+      "line": "Mornings start slowly here. Lemon groves, sea air, coffee on a terrace.",
+      "scene": "The camera drifts along a terrace of lemon trees, sunlight through the leaves, the sea glittering below."
     },
     {
       "id": "b3",
-      "line": "Where the road hugs the cliff, and every turn is a postcard.",
+      "line": "By noon, the coast road is calling. Every bend, a new view.",
       "scene": "The camera follows the narrow coastal road as it curves around the cliff, the bay opening up below."
     },
     {
       "id": "b4",
-      "line": "Seven days of boat trips, long lunches, and evenings that never hurry.",
-      "scene": "A small wooden boat glides across the calm turquoise water toward the harbour."
+      "line": "Afternoons belong to the water. Take a boat, find your own cove.",
+      "scene": "A small wooden boat glides across calm turquoise water toward a hidden cove under the cliffs."
     },
     {
       "id": "b5",
-      "line": "Meridian. Amalfi, slowly. Curious about anything? Just ask.",
-      "scene": "The camera rises slowly over the harbour and the whole town in warm golden light."
+      "line": "And every evening, you come home to Hilton, right above the bay.",
+      "scene": "An elegant cliffside hotel terrace with an infinity pool overlooking the bay, warm late-afternoon light."
+    },
+    {
+      "id": "b6",
+      "line": "Hilton Amalfi Coast. Seven nights from twenty-four fifty. And if you're wondering about anything, just ask me.",
+      "scene": "The camera rises slowly over the hotel, the harbour and the whole town in golden light."
     }
   ],
   "facts": {
-    "package": "Seven nights on the Amalfi Coast, staying in Positano, in a sea-view room at a small family-run hotel.",
-    "price": "From 2,450 US dollars per person, including flights from New York, hotel, breakfast, and a private boat day.",
-    "dates": "Departures every Saturday from May to October. June and September are the sweet spot: warm sea, fewer crowds.",
-    "getting_there": "Fly into Naples, then a ninety-minute private transfer along the coast road, included.",
-    "included": "Flights, seven nights' hotel, breakfast, airport transfers, a private boat day to Capri, and a lemon-grove cooking class in Ravello.",
-    "not_included": "Lunches and dinners, except the cooking class. Travel insurance.",
-    "beach": "The hotel is a four-minute walk down the steps to Spiaggia Grande, Positano's main beach.",
-    "night": "Evenings are slow: dinner on a terrace, the harbour lit up, a limoncello on the waterfront.",
-    "weather": "Summer is 27 to 31 degrees Celsius and sunny. Spring and autumn are mild, around 20 to 24.",
-    "food": "Fresh seafood, lemon everything, handmade pasta, and the cooking class in Ravello.",
-    "kids": "Families welcome. Positano has a lot of stairs, so a light stroller or a carrier works best.",
-    "booking": "Book at meridian dot travel slash amalfi. Free cancellation up to thirty days before departure.",
-    "brand": "Meridian is a small-group and independent travel company. This trip is independent: your own pace, with a local host on call."
-  }
+    "hotel": "Hilton Amalfi Coast: a 74-room cliffside resort above Positano, built into a restored 1920s villa, with terraced gardens down to the water.",
+    "price": "The seven-night package is from 2,450 US dollars per person: flights from New York, a sea-view room, daily breakfast, airport transfers and a private boat day to Capri.",
+    "shorter_stays": "Three nights from 1,290 dollars per person, five nights from 1,850 — both with flights from New York, a sea-view room, breakfast and the airport transfer. The boat day can be added for 180 dollars.",
+    "hotel_only": "Rooms alone are from 340 dollars a night for a sea-view king, breakfast included. Suites with a private terrace are from 690.",
+    "transport": "Yes. A private driver meets you at Naples airport and drives you along the coast road to the hotel, and back at the end — included. Ferries link Positano, Amalfi and Capri from the beach below, and the hotel shuttle runs into town every 30 minutes. A private driver for day trips is 95 dollars a day.",
+    "beach": "The hotel has its own beach club on Spiaggia Grande, a four-minute walk down the garden steps or a two-minute ride in the cliff elevator. Loungers and umbrellas are free for guests.",
+    "pool": "An infinity pool on the main terrace, heated from April to October, plus a quieter adults-only pool in the lemon garden.",
+    "spa": "The Grotta Spa is carved into the rock: a sea-water plunge pool, a steam cave and lemon-and-sea-salt massages. Fifty minutes from 160 dollars.",
+    "dining": "Three restaurants: Terra, the rooftop for long seafood dinners; Limone, the garden trattoria for handmade pasta; and the beach club for lunch. Breakfast runs 7 to 11, with sfogliatelle baked every morning.",
+    "bar": "The Terrace Bar is famous for its sunset limoncello spritz, with live piano on Friday and Saturday nights.",
+    "night": "Evenings are slow: dinner on the rooftop at Terra, the harbour lights below, then a stroll through Positano's lanes for gelato.",
+    "food": "Fresh seafood, lemon everything, handmade pasta, and a weekly cooking class in the lemon garden where you make scialatielli with the chef.",
+    "dates": "Packages depart every Saturday from April to October. June and September are the sweet spot: warm sea, fewer crowds.",
+    "weather": "Summer is 27 to 31 degrees Celsius and sunny; the sea is about 25. Spring and autumn are mild, around 20 to 24.",
+    "rooms": "Every room faces the sea. Sea-view kings and twins, terrace suites, and the two-bedroom Villa Suite with its own plunge pool.",
+    "kids": "Families are welcome: the Piccoli kids' club runs 9 to 6 for ages 4 to 12, with pizza-making and boat-spotting. Cots and high chairs are free.",
+    "accessibility": "Positano is famously steep, but the hotel has two cliff elevators and step-free routes to the pool, restaurants and beach club.",
+    "pets": "Small dogs are welcome for 40 dollars a night, with a bed and bowl in the room.",
+    "honors": "Hilton Honors members earn points on the whole package and get a free room upgrade when available, late checkout until 2, and free Wi-Fi.",
+    "checkin": "Check-in from 3, check-out by 11. Early arrivals can use the beach club and showers while the room is readied.",
+    "wifi": "Fast free Wi-Fi everywhere, including the beach club.",
+    "activities": "Boat day to Capri and the Blue Grotto, the Path of the Gods hike at sunrise, a Ravello concert evening, kayaking to Fornillo beach, and a limoncello tasting.",
+    "weddings": "The terrace hosts weddings for up to 80 guests, with ceremonies at sunset.",
+    "booking": "Book at hilton dot com slash amalfi, or say 'book it' and we'll send the details to your phone. Free cancellation up to 30 days before arrival.",
+    "insurance_and_extras": "Lunches and dinners are not included, except the cooking class. Travel insurance is extra.",
+    "currency_and_language": "Italy uses the euro; the hotel team speaks English, Italian, Spanish and French.",
+    "local_tip": "Ask the concierge for Da Vincenzo's stuffed peppers, and take the 6 p.m. ferry back from Amalfi — the light on the cliffs is the best of the day."
+  },
+  "roleplay": "This is a roleplay demo ad. The facts below are the ad's canon. If a viewer asks something they don't cover, improvise a plausible, specific, upbeat answer that fits the facts and the setting. Never say you don't know or that you're an AI; never contradict the facts."
 }

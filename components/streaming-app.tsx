@@ -10,8 +10,10 @@ import {
 } from "react";
 
 import { Artwork } from "@/components/artwork";
+import { DevPanel } from "@/components/dev-panel";
 import { VideoPlayer } from "@/components/video-player";
 import { rails, titleById, titles, type Title } from "@/lib/catalog";
+import { useDevPanel } from "@/lib/dev-panel";
 
 type View =
   | { kind: "browse" }
@@ -187,6 +189,57 @@ function ContentRail({
   );
 }
 
+function ProfileMenu() {
+  const [open, setOpen] = useState(false);
+  const openDevPanel = useDevPanel((state) => state.set);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: MouseEvent) => {
+      if (!ref.current?.contains(event.target as Node)) setOpen(false);
+    };
+    window.addEventListener("mousedown", close);
+    return () => window.removeEventListener("mousedown", close);
+  }, [open]);
+  return (
+    <div className="profile-wrap" ref={ref}>
+      <button
+        className="profile-button"
+        aria-label="Open profile menu"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <span>J</span>
+        <i>⌄</i>
+      </button>
+      {open && (
+        <div className="profile-menu" role="menu">
+          <div className="profile-menu-head">
+            <span>J</span>
+            <strong>Jaidev</strong>
+          </div>
+          <button
+            role="menuitem"
+            onClick={() => {
+              openDevPanel(true);
+              setOpen(false);
+            }}
+          >
+            Audio check
+            <small>D</small>
+          </button>
+          <button role="menuitem" onClick={() => setOpen(false)}>
+            Account
+          </button>
+          <button role="menuitem" onClick={() => setOpen(false)}>
+            Help Center
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Browse({
   onOpen,
   onPlay,
@@ -250,18 +303,29 @@ function Browse({
           <button className="nav-icon" aria-label="Notifications">
             ◉
           </button>
-          <button className="profile-button" aria-label="Open profile menu">
-            <span>J</span>
-            <i>⌄</i>
-          </button>
+          <ProfileMenu />
         </div>
       </nav>
 
       <section id="home" className="hero">
         <Artwork artwork={featured.artwork} className="hero-art" />
+        {featured.playback.src && (
+          <video
+            className="hero-video"
+            src={`${featured.playback.src}#t=62`}
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="auto"
+            onLoadedData={(event) => event.currentTarget.classList.add("ready")}
+          />
+        )}
         <div className="hero-shade" />
         <div className="hero-content">
-          <p className="hero-eyebrow">{featured.eyebrow}</p>
+          <p className="hero-eyebrow">
+            {featured.eyebrow} <span>· {featured.year}</span>
+          </p>
           <h1>{featured.name}</h1>
           <p className="hero-tagline">{featured.tagline}</p>
           <div className="hero-badge-line">
@@ -273,6 +337,7 @@ function Browse({
             <strong>{featured.badge}</strong>
           </div>
           <p className="hero-description">{featured.description}</p>
+          {featured.credit && <p className="hero-credit">{featured.credit}</p>}
           <div className="hero-actions">
             <PlayButton onClick={() => onPlay(featured)} />
             <button
@@ -452,22 +517,29 @@ export function StreamingApp() {
     });
   }, []);
   const play = useCallback((title: Title) => {
+    // Straight into a full-screen player (the click is the user gesture).
+    document.documentElement.requestFullscreen?.().catch(() => undefined);
     startTransition(() => setView({ kind: "watch", title }));
   }, []);
 
   if (view.kind === "watch")
     return (
-      <VideoPlayer
-        title={view.title}
-        source={view.title.playback}
-        onBack={() => {
-          setDetailTitle(view.title);
-          setView({ kind: "detail", title: view.title });
-        }}
-      />
+      <>
+        <VideoPlayer
+          title={view.title}
+          source={view.title.playback}
+          onBack={() => {
+            if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined);
+            setDetailTitle(view.title);
+            setView({ kind: "detail", title: view.title });
+          }}
+        />
+        <DevPanel />
+      </>
     );
   return (
     <>
+      <DevPanel />
       <Browse onOpen={openDetail} onPlay={play} />
       {view.kind === "detail" && detailTitle && (
         <DetailModal

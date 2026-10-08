@@ -8,7 +8,7 @@ import { HappyOysterModel } from "@reactor-models/happy-oyster";
 
 const WORLD_KEY = "ad-lab.world";
 const DEFAULT_PROMPT =
-  "The Amalfi Coast in Italy on a bright summer morning. Pastel houses stacked up a steep cliff above a turquoise bay, lemon trees on terraces, small wooden boats in the harbour, a winding coastal road. Cinematic travel film, warm golden light, slow graceful camera.";
+  "Photoreal travel commercial, shot on a gimbal and a drone, 35mm film look. You are a traveller arriving at Hilton Amalfi Coast, a cliffside resort above the pastel town of Positano. Recurring landmarks: the Hilton infinity-pool terrace with white umbrellas over the turquoise bay; Terra, the Hilton rooftop restaurant strung with warm lights; the lemon-grove garden; the harbour of wooden boats and the ferry pier; the winding coast road where a cream vintage convertible drives along the cliff. The world moves through the day: bright morning, golden hour, then a lantern-lit night when the whole town glows over the dark water. Boats come and go, waiters set the rooftop tables, swimmers glide across the infinity pool, the ferry crosses the bay. Warm Mediterranean sunlight, glossy turquoise water, terracotta and lemon-yellow textures, sea spray, fast sweeping drone moves and tracking shots.";
 
 async function openSession() {
   const r = await fetch("/api/happy-oyster/token", { method: "POST" });
@@ -69,8 +69,8 @@ export default function AdLab() {
     const w = await modelRef.current!.createWorld({
       prompt,
       resolution: "720p",
-      layout: "Stable",
-      narrative: "Calm",
+      layout: "Fast",
+      narrative: "Dramatic",
     });
     if (w.encrypted_world_id) {
       localStorage.setItem(WORLD_KEY, w.encrypted_world_id);

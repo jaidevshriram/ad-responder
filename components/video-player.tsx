@@ -27,8 +27,10 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 
+import { AdBreak, type AdPhase } from "@/components/ad-break";
 import { Artwork } from "@/components/artwork";
 import type { PlaybackSource, Title } from "@/lib/catalog";
+import { useDevPanel } from "@/lib/dev-panel";
 import { defaultPlayerConfig, type PlayerConfig } from "@/lib/player-config";
 
 type VideoPlayerProps = {
@@ -68,7 +70,14 @@ export function VideoPlayer({
   const [buffering, setBuffering] = useState(true);
   const [hasFrame, setHasFrame] = useState(false);
   const [error, setError] = useState("");
-  const [controlsVisible, setControlsVisible] = useState(true);
+  // Idle = no pointer movement for a while. Controls and cursor hide only then,
+  // and any movement brings both back.
+  const [idle, setIdle] = useState(false);
+  const [adPhase, setAdPhase] = useState<AdPhase>("idle");
+  const adActive = adPhase !== "idle";
+  const adActiveRef = useRef(false);
+  adActiveRef.current = adActive;
+  const devOpen = useDevPanel((state) => state.open);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [rate, setRate] = useState(1);
   const [captions, setCaptions] = useState(false);
@@ -85,16 +94,14 @@ export function VideoPlayer({
   const progressPercent = duration ? (time / duration) * 100 : 0;
   const bufferedPercent = duration ? (buffered / duration) * 100 : 0;
 
+  const controlsVisible = !adActive && (!idle || !playing || settingsOpen);
+  const cursorHidden = idle && (playing || adActive) && !devOpen && !settingsOpen;
+
   const revealControls = useCallback(() => {
-    setControlsVisible(true);
+    setIdle(false);
     if (hideTimer.current) clearTimeout(hideTimer.current);
-    if (playing && !settingsOpen) {
-      hideTimer.current = setTimeout(
-        () => setControlsVisible(false),
-        config.controlsHideDelayMs,
-      );
-    }
-  }, [config.controlsHideDelayMs, playing, settingsOpen]);
+    hideTimer.current = setTimeout(() => setIdle(true), config.controlsHideDelayMs);
+  }, [config.controlsHideDelayMs]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -122,6 +129,11 @@ export function VideoPlayer({
     }
 
     video.volume = 0.8;
+    // ?muted=1 starts the show silent (rehearsals, automated checks).
+    if (new URLSearchParams(window.location.search).get("muted") === "1") {
+      video.muted = true;
+      setMuted(true);
+    }
     video.play().catch(() => setPlaying(false));
     return () => hls?.destroy();
   }, [source]);
@@ -139,6 +151,11 @@ export function VideoPlayer({
       if (hideTimer.current) clearTimeout(hideTimer.current);
     };
   }, [revealControls]);
+
+  // Playback state changes (pause, end) should show the controls again.
+  useEffect(() => {
+    if (!playing) revealControls();
+  }, [playing, revealControls]);
 
   const togglePlayback = useCallback(() => {
     const video = videoRef.current;
@@ -193,6 +210,8 @@ export function VideoPlayer({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (adActiveRef.current) return; // the ad break owns the keyboard
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       const key = event.key.toLowerCase();
       if ([" ", "k", "arrowleft", "arrowright", "m", "f", "c"].includes(key))
         event.preventDefault();
@@ -245,9 +264,9 @@ export function VideoPlayer({
     <div
       ref={shellRef}
       style={{ "--red": config.accent } as React.CSSProperties}
-      className={`watch-screen ${controlsVisible ? "controls-visible" : "controls-hidden"} ${playing ? "is-playing" : "is-paused"}`}
-      onMouseMove={revealControls}
-      onMouseLeave={() => playing && setControlsVisible(false)}
+      className={`watch-screen ${controlsVisible ? "controls-visible" : "controls-hidden"} ${cursorHidden ? "cursor-hidden" : ""} ${playing ? "is-playing" : "is-paused"} ${adActive ? `ad-active show-${adPhase}` : ""}`}
+      onPointerMove={revealControls}
+      onPointerDown={revealControls}
     >
       <Artwork artwork={title.artwork} className="player-poster" />
       <video
@@ -264,7 +283,6 @@ export function VideoPlayer({
         onEnded={() => {
           setPlaying(false);
           setEnded(true);
-          setControlsVisible(true);
         }}
         onWaiting={() => setBuffering(true)}
         onCanPlay={() => setBuffering(false)}
@@ -282,7 +300,7 @@ export function VideoPlayer({
       />
       <div className="player-vignette" aria-hidden="true" />
 
-      {buffering && !error && (
+      {buffering && !error && !adActive && (
         <div className="buffer-spinner" aria-label="Buffering" />
       )}
       {error && (
@@ -293,7 +311,7 @@ export function VideoPlayer({
           <button onClick={onBack}>Back to NotFlix</button>
         </div>
       )}
-      {!playing && !buffering && !error && (
+      {!playing && !buffering && !error && !adActive && (
         <button
           className="center-play"
           onClick={togglePlayback}
@@ -490,8 +508,17 @@ export function VideoPlayer({
         </div>
       </div>
 
-      {captions && (
+      {captions && !adActive && (
         <div className="caption-sample">The signal is getting stronger.</div>
+      )}
+
+      {title.adBreak && (
+        <AdBreak
+          showVideo={videoRef}
+          showTitle={title.name}
+          onPhase={setAdPhase}
+          controlsVisible={controlsVisible || !playing}
+        />
       )}
     </div>
   );
