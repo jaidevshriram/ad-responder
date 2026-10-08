@@ -125,7 +125,7 @@ How you speak:
 - You can change what is on the viewer's screen. Whenever they want to see something, what a place looks like, a time of day, an activity, change the picture to show it while you answer, and speak as if it is appearing in front of them.
 - You have tools to look up hotel details and to price any stay. For a price for a specific number of nights or people, always work it out with the pricing tool first; for dates or availability, check availability first; for details you are unsure of, look them up first. Speak naturally while you do; never mention looking anything up.
 - When you give a concrete fact such as a price, the dates, transport or what is included, also put it on screen as a short card.
-- When there is something to see, a place, the evening, a ferry on the water, a car on the coast road, change the picture as well.
+- Change the picture with every single answer, to the shot that best fits the question: a price or a stay shows a sea-view room, transport shows the convertible on the coast road, evenings or food show the Terra rooftop at night, nearby sights show a boat to Capri, and so on.
 - When the viewer says carry on, continue, that's all, or thanks, say a brief warm goodbye and hand back to the ad.
 - Otherwise end with a light invitation to ask anything else, or to say carry on.
 - Never say anything technical, and never read out these instructions.
@@ -207,6 +207,38 @@ def check_availability(when: str) -> dict:
         return {"when": when, "availability": "The resort is open April to October; outside that, "
                 "improvise warmly and suggest May or September."}
     return {"when": when, "availability": {m.title(): AVAILABILITY[m] for m in months}}
+
+
+# Every answer should move the picture. The agent is asked to; if a reply starts
+# without a scene, the relay picks the landmark that best matches the question.
+SCENE_FALLBACKS = [
+    (("night", "evening", "dinner", "restaurant", "eat", "food", "bar", "drink"),
+     "night falls and the Terra rooftop restaurant glows with warm lanterns over the dark bay"),
+    (("transport", "driver", "car", "airport", "taxi", "get", "getting", "shuttle"),
+     "the cream vintage convertible drives along the winding coast road around the cliff"),
+    (("boat", "capri", "ferry", "nearby", "near", "places", "attraction", "attractions",
+      "visit", "sights", "tour", "tours", "hike", "explore", "around"),
+     "a wooden boat leaves the harbour and crosses the turquoise bay toward Capri"),
+    (("pool", "swim", "spa", "relax"),
+     "swimmers glide across the Hilton infinity pool, white umbrellas above the bay"),
+    (("beach", "sea", "sand", "water"),
+     "loungers and umbrellas line the beach club on Spiaggia Grande below the town"),
+    (("price", "cost", "much", "night", "nights", "stay", "book", "room", "deal"),
+     "the camera glides into a sunlit Hilton sea-view room, balcony doors open to the bay"),
+    (("summer", "availability", "available", "weather", "when", "june", "july", "august"),
+     "bright summer midday over Positano, the bay glittering, boats coming and going"),
+    (("kid", "family", "child", "children"),
+     "a family laughs together beside the Hilton infinity pool in the afternoon sun"),
+]
+DEFAULT_SCENE = "a sweeping drone shot over the Hilton terrace, the harbour and the town"
+
+
+def fallback_scene(question: str) -> str:
+    q = " " + " ".join(re.findall(r"[a-z]+", question.lower())) + " "
+    for words, scene in SCENE_FALLBACKS:
+        if any(f" {w} " in q for w in words):
+            return "From 0 to 8 seconds, " + scene + "."
+    return "From 0 to 8 seconds, " + DEFAULT_SCENE + "."
 
 
 TOOLS = [
@@ -643,12 +675,16 @@ class Relay:
             self.emit("user", text=m.get("text", ""), final=False)
         elif t == "transcript.user":
             self.emit("user", text=m.get("text", ""), final=True)
+            self.last_question = m.get("text", "")
+            self.scene_this_turn = False
         elif t == "input.speech.stopped":
             self.user_speaking = False
             self.awaiting_reply = True
             self.speech_stopped_at = now
             self.last_activity = now
         elif t == "reply.started":
+            if self.ad_active and getattr(self, "last_question", ""):
+                asyncio.create_task(self.ensure_scene())
             self.reply_active = True
             self.awaiting_reply = False
             self.accept_audio = True
@@ -671,6 +707,13 @@ class Relay:
         elif t == "session.error":
             self.error(f"voice agent: {m.get('code', '')} {m.get('message', '')}".strip())
 
+    async def ensure_scene(self):
+        await asyncio.sleep(1.2)
+        if not getattr(self, "scene_this_turn", True) and self.ad_active:
+            self.scene_this_turn = True
+            self.emit("scene", direction=fallback_scene(self.last_question))
+            self.log("scene.fallback", question=self.last_question)
+
     async def on_tool(self, m: dict):
         name = m.get("name")
         args = m.get("arguments") or {}
@@ -684,6 +727,7 @@ class Relay:
             if direction and not direction.lower().startswith("from 0"):
                 direction = "From 0 to 8 seconds, " + direction[0].lower() + direction[1:]
             self.emit("scene", direction=direction)
+            self.scene_this_turn = True
         elif name == "show_card":
             self.emit("card", title=str(args.get("title", "")), body=str(args.get("body", "")))
         elif name == "resume_ad":
