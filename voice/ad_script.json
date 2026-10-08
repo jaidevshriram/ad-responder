@@ -2,37 +2,37 @@
   "brand": "Hilton",
   "title": "Hilton Amalfi Coast",
   "voice": "vera",
-  "world_prompt": "The Amalfi Coast in Italy on a bright summer morning. Pastel houses stacked up a steep cliff above a turquoise bay, lemon trees on terraces, small wooden boats in the harbour, a winding coastal road. Cinematic travel film, warm golden light, slow graceful camera.",
+  "world_prompt": "Photoreal travel commercial, shot on a gimbal and a drone, 35mm film look. You are a traveller arriving at Hilton Amalfi Coast, a cliffside resort above the pastel town of Positano. Recurring landmarks: the Hilton infinity-pool terrace with white umbrellas over the turquoise bay; Terra, the Hilton rooftop restaurant strung with warm lights; the lemon-grove garden; the harbour of wooden boats and the ferry pier; the winding coast road where a cream vintage convertible drives along the cliff. The world moves through the day: bright morning, golden hour, then a lantern-lit night when the whole town glows over the dark water. Boats come and go, waiters set the rooftop tables, swimmers glide across the infinity pool, the ferry crosses the bay. Warm Mediterranean sunlight, glossy turquoise water, terracotta and lemon-yellow textures, sea spray, fast sweeping drone moves and tracking shots.",
   "beats": [
     {
       "id": "b1",
       "line": "This is Amalfi.",
-      "scene": "A slow, wide establishing shot of the pastel town on the cliff above the turquoise bay in morning light."
+      "scene": "From 0 to 8 seconds, a sweeping drone shot over the pastel town of Positano and the turquoise bay in bright morning light."
     },
     {
       "id": "b2",
       "line": "Mornings start slowly here. Lemon groves, sea air, coffee on a terrace.",
-      "scene": "The camera drifts along a terrace of lemon trees, sunlight through the leaves, the sea glittering below."
+      "scene": "From 0 to 8 seconds, the traveller walks through the Hilton lemon-grove garden, sunlight through the leaves, the sea glittering below."
     },
     {
       "id": "b3",
       "line": "By noon, the coast road is calling. Every bend, a new view.",
-      "scene": "The camera follows the narrow coastal road as it curves around the cliff, the bay opening up below."
+      "scene": "From 0 to 8 seconds, the cream vintage convertible drives along the winding coast road around the cliff, the bay far below."
     },
     {
       "id": "b4",
       "line": "Afternoons belong to the water. Take a boat, find your own cove.",
-      "scene": "A small wooden boat glides across calm turquoise water toward a hidden cove under the cliffs."
+      "scene": "From 0 to 8 seconds, a wooden boat leaves the harbour and crosses the turquoise bay toward a hidden cove under the cliffs."
     },
     {
       "id": "b5",
       "line": "And every evening, you come home to Hilton, right above the bay.",
-      "scene": "An elegant cliffside hotel terrace with an infinity pool overlooking the bay, warm late-afternoon light."
+      "scene": "From 0 to 8 seconds, the camera sweeps up to the Hilton infinity-pool terrace, white umbrellas over the bay, warm golden-hour light."
     },
     {
       "id": "b6",
       "line": "Hilton Amalfi Coast. Seven nights from twenty-four fifty. And if you're wondering about anything, just ask me.",
-      "scene": "The camera rises slowly over the hotel, the harbour and the whole town in golden light."
+      "scene": "From 0 to 8 seconds, a slow rising drone shot over the Hilton terrace, the harbour and the whole town in golden light."
     }
   ],
   "facts": {

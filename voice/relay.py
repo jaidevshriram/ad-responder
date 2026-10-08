@@ -113,6 +113,7 @@ How you speak:
 - Sound like a natural part of the ad: warm, specific, using the exact figures from the facts.
 {unknown}
 - You can change what is on the viewer's screen. Whenever they want to see something, what a place looks like, a time of day, an activity, change the picture to show it while you answer, and speak as if it is appearing in front of them.
+- You have tools to look up hotel details and to price any stay. For a price for a specific number of nights or people, always work it out with the pricing tool first; for details you are unsure of, look them up first. Speak naturally while you do; never mention looking anything up.
 - When you give a concrete fact such as a price, the dates, transport or what is included, also put it on screen as a short card.
 - When there is something to see, a place, the evening, a ferry on the water, a car on the coast road, change the picture as well.
 - When the viewer says carry on, continue, that's all, or thanks, say a brief warm goodbye and hand back to the ad.
@@ -126,6 +127,55 @@ Facts you may use:
 {facts}"""
 
 
+
+def _script() -> dict:
+    try:
+        return json.loads((HERE / "ad_script.json").read_text())
+    except Exception:
+        return SCRIPT
+
+
+_STOP = {"the", "a", "an", "is", "it", "do", "you", "there", "what", "how", "about", "of",
+         "for", "to", "and", "in", "on", "at", "can", "i", "we", "my", "your", "any", "have"}
+
+
+def lookup_info(topic: str) -> dict:
+    """The facts whose name or text share the most words with the question."""
+    facts = _script()["facts"]
+    words = {w for w in re.findall(r"[a-z]+", topic.lower()) if w not in _STOP}
+    scored = []
+    for k, v in facts.items():
+        hay = set(re.findall(r"[a-z]+", (k.replace("_", " ") + " " + v).lower()))
+        score = len(words & hay) + 3 * len(words & set(k.split("_")))
+        if score:
+            scored.append((score, k, v))
+    scored.sort(reverse=True)
+    found = {k: v for _, k, v in scored[:3]}
+    if not found:
+        return {"facts": {}, "note": "Not in the brochure. Improvise a plausible, specific answer "
+                                      "that fits the hotel and the Amalfi Coast."}
+    return {"facts": found}
+
+
+def quote_price(args: dict) -> dict:
+    """Package prices: 3 nights $1,290, 5 nights $1,850, 7 nights $2,450 per person
+    with flights; other lengths follow the same per-night rate. Hotel-only is per room."""
+    nights = max(1, int(args.get("nights") or 1))
+    people = max(1, int(args.get("travellers") or 1))
+    if args.get("with_flights", True) is False:
+        per_night = 340
+        total = per_night * nights * ((people + 1) // 2)
+        return {"nights": nights, "travellers": people, "hotel_only": True,
+                "price_per_room_per_night": per_night, "total_usd": total,
+                "includes": "sea-view room, breakfast"}
+    table = {3: 1290, 5: 1850, 7: 2450}
+    per_person = table.get(nights, round((450 + 280 * nights) / 10) * 10)
+    return {"nights": nights, "travellers": people, "per_person_usd": per_person,
+            "total_usd": per_person * people,
+            "includes": "flights from New York, sea-view room, breakfast, airport transfers"
+                        + (", private boat day to Capri" if nights >= 7 else "")}
+
+
 TOOLS = [
     {"type": "function", "name": "show_scene",
      "description": ("Change what the viewer sees in the ad. Use whenever they ask what "
@@ -133,10 +183,14 @@ TOOLS = [
                      "activity, or say 'show me'. Call it at the start of your answer."),
      "parameters": {"type": "object", "properties": {
          "direction": {"type": "string",
-                       "description": ("A short cinematic description of the new shot, in "
-                                       "the same world as the ad, e.g. 'Dusk over the "
-                                       "harbour, lights coming on along the waterfront, "
-                                       "slow push in.'")}},
+                       "description": ("One short shot direction for the live video, naming "
+                                       "one of the ad's landmarks: the Hilton lobby, the Hilton "
+                                       "infinity-pool terrace, Terra the rooftop restaurant, "
+                                       "the lemon-grove garden, the harbour and ferry pier, the "
+                                       "coast road with the cream vintage convertible, or the "
+                                       "town of Positano. One action, and say the time of day "
+                                       "when it changes, e.g. 'Night falls over the harbour, "
+                                       "lanterns glow on the Terra rooftop.'")}},
          "required": ["direction"]}},
     {"type": "function", "name": "show_card",
      "description": ("Put a small fact card on screen. Use when you state a concrete fact "
@@ -146,6 +200,23 @@ TOOLS = [
          "title": {"type": "string", "description": "2-4 words, e.g. 'From $2,450'."},
          "body": {"type": "string", "description": "One short line with the detail."}},
          "required": ["title", "body"]}},
+    {"type": "function", "name": "lookup_hotel_info",
+     "description": ("Look up details about the hotel and the trip: rooms, pools, spa, "
+                     "restaurants, beach, transport, activities, kids, pets, check-in, "
+                     "weather, booking. Use it whenever the viewer asks about something "
+                     "you are not sure of, before answering."),
+     "parameters": {"type": "object", "properties": {
+         "topic": {"type": "string", "description": "What the viewer asked about, in a few words."}},
+         "required": ["topic"]}},
+    {"type": "function", "name": "quote_price",
+     "description": ("Work out the price of a stay. Use for any question about cost for a "
+                     "number of nights, days or people, e.g. 'how much for three days', "
+                     "'what would it cost for two of us for a week'."),
+     "parameters": {"type": "object", "properties": {
+         "nights": {"type": "integer", "description": "Number of nights (a 3-day stay is 3 nights)."},
+         "travellers": {"type": "integer", "description": "Number of people, default 1."},
+         "with_flights": {"type": "boolean", "description": "False for a hotel-only stay. Default true."}},
+         "required": ["nights"]}},
     {"type": "function", "name": "resume_ad",
      "description": ("Hand back to the ad. Use when the viewer says carry on, continue, "
                      "go on, keep going, that's all, ok thanks, or otherwise signals they "
@@ -560,15 +631,26 @@ class Relay:
             try: args = json.loads(args or "{}")
             except Exception: args = {}
         if name == "show_scene":
-            self.emit("scene", direction=str(args.get("direction", "")).strip())
+            direction = str(args.get("direction", "")).strip()
+            # HappyOyster lands instructions in ~4 s blocks; an explicit window
+            # makes it commit to the change instead of drifting back.
+            if direction and not direction.lower().startswith("from 0"):
+                direction = "From 0 to 8 seconds, " + direction[0].lower() + direction[1:]
+            self.emit("scene", direction=direction)
         elif name == "show_card":
             self.emit("card", title=str(args.get("title", "")), body=str(args.get("body", "")))
         elif name == "resume_ad":
             self.resume_requested = True
+        result: dict = {"ok": True}
+        if name == "lookup_hotel_info":
+            result = lookup_info(str(args.get("topic", "")))
+            self.emit("lookup", topic=str(args.get("topic", "")), found=list(result.get("facts", {})))
+        elif name == "quote_price":
+            result = quote_price(args)
         ws = self.agent_ws
         if ws is not None:
             await ws.send(json.dumps({"type": "tool.result", "call_id": m.get("call_id"),
-                                      "result": json.dumps({"ok": True})}))
+                                      "result": json.dumps(result)}))
 
     # ---------------------------------------------------------------- timeline
     async def wait_interrupt(self, seconds: float) -> bool:
