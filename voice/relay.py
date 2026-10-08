@@ -42,24 +42,35 @@ END_WAIT_S = 4.0              # after the last line, before ad.end
 CLOSE_GRACE_S = 5.0           # keep the agent open a little after ad.end
 
 # --silent / RELAY_SILENT=1: nothing reaches a speaker (timing unchanged).
-# --out mac|respeaker: output device when not silent (default respeaker).
 SILENT = "--silent" in sys.argv or os.environ.get("RELAY_SILENT") == "1"
-OUT = "respeaker"
-if "--out" in sys.argv and sys.argv.index("--out") + 1 < len(sys.argv):
-    OUT = sys.argv[sys.argv.index("--out") + 1].lower()
-# --in mac|respeaker: microphone (default respeaker).
-IN = "respeaker"
-if "--in" in sys.argv and sys.argv.index("--in") + 1 < len(sys.argv):
-    IN = sys.argv[sys.argv.index("--in") + 1].lower()
+
+
+def _flag(name: str, default: str) -> str:
+    i = sys.argv.index(name) if name in sys.argv else -1
+    return sys.argv[i + 1].lower() if 0 <= i < len(sys.argv) - 1 else default
+
+
+# --in / --out  auto|mac|respeaker. "auto" (the default) uses a reSpeaker XVF3800
+# when one is plugged in and the Mac's own mic and speakers otherwise.
+IN = _flag("--in", "auto")
+OUT = _flag("--out", "auto")
 # Without the reSpeaker's echo cancelling, the mic hears our own playback. A
 # loudness threshold was tried and failed: at demo volume the MacBook mic hears
 # the narration louder than a voice, and an open mic in a busy room answers
-# bystanders. So the mic is strictly push-to-talk: open only while the viewer
-# holds (browser "ptt"); silence otherwise, which also lets each turn close.
-ECHO_GATE = IN == "mac" or "--gate" in sys.argv
+# bystanders. So on any other mic the relay is strictly push-to-talk: open only
+# while the viewer holds (browser "ptt"); silence otherwise, which also lets each
+# turn close. --ptt forces this on a reSpeaker too.
 
 TOOL_NAMES = ("show_scene", "show_card", "resume_ad")
 _TOOL_RE = re.compile(r"\b(show[ _]?scene|show[ _]?card|resume[ _]?ad)\b[.,]?", re.I)
+
+
+def join_delta(text: str, delta: str) -> str:
+    """Agent transcript deltas are words, but after a tool call they stop carrying
+    their trailing space ("1,290dollarsper..."). Put the space back between words."""
+    if text and delta and delta[0].isalnum() and not text[-1].isspace() and text[-1] not in "-'(/":
+        return text + " " + delta
+    return text + delta
 
 
 def scrub(text: str) -> str:
@@ -429,6 +440,7 @@ class Relay:
         self.inject: list[bytes] = []
         self.mic_muted = False             # debug.mute_mic: real mic -> silence
         self.ptt = False                   # browser "ptt": viewer is holding to talk
+        self.ptt_only = True               # set by open_audio(): mic only while held
         self.narration = {b["id"]: read_wav(NARR / f"{b['id']}.wav") for b in BEATS}
 
         self.agent_ws = None
@@ -521,11 +533,10 @@ class Relay:
                 nxt = time.monotonic()
 
     def open_audio(self):
-        dev_in, dev_out = pick_device()
-        if IN == "mac":
-            dev_in = pick_device("MacBook Pro Microphone")[0]
-        if OUT == "mac":
-            dev_out = pick_device("MacBook Pro Speakers")[1]
+        rs_in, rs_out = pick_device()          # the reSpeaker, if plugged in
+        dev_in = None if IN == "mac" else rs_in    # None: the system default device
+        dev_out = None if OUT == "mac" else rs_out
+        self.ptt_only = dev_in is None or "--ptt" in sys.argv
         iin, iout = dev_info(dev_in, "input"), dev_info(dev_out, "output")
         in_ch = max(1, min(2, iin["max_input_channels"]))
         self.out_ch = max(1, min(2, iout["max_output_channels"]))
@@ -556,6 +567,7 @@ class Relay:
                     else:
                         time.sleep(0.8)
         print(f"audio  mic '{self.mic_name}'  speaker '{self.spk_name}'"
+              + ("  (push-to-talk)" if self.ptt_only else "  (open mic, echo-cancelled)")
               + ("  (SILENT: output discarded)" if SILENT else ""), flush=True)
 
     async def mic_pump(self):
@@ -572,7 +584,7 @@ class Relay:
                 frame = silence
             elif self.ptt:
                 pass                                   # holding to talk: open
-            elif ECHO_GATE:
+            elif self.ptt_only:
                 frame = silence                        # push-to-talk only: closed
             ws = self.agent_ws
             if ws is not None and self.agent_state == "ready":
@@ -692,7 +704,7 @@ class Relay:
             self.agent_text = ""
             self.last_activity = now
         elif t == "transcript.agent.delta":
-            self.agent_text += m.get("delta", "")
+            self.agent_text = join_delta(self.agent_text, m.get("delta", ""))
             self.emit("agent", text=scrub(self.agent_text), final=False)
         elif t == "transcript.agent":
             text = scrub(m.get("text") or self.agent_text)
@@ -797,7 +809,8 @@ class Relay:
                     self.emit("beat", id=b["id"], index=idx, total=n,
                               line=b["line"], scene=b["scene"])
                     self.mixer.play_narration(self.narration[b["id"]])
-                    hit = await self.wait_line() or await self.wait_interrupt(GAP_S)
+                    hold = GAP_S + float(b.get("hold", 0))   # let the shot breathe
+                    hit = await self.wait_line() or await self.wait_interrupt(hold)
                     idx += 1
                     if hit:
                         await self.conversation_over()

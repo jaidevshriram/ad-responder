@@ -1712,3 +1712,8 @@ footer a:hover {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Real key art replaces the abstract motif. */
+.artwork-has-image .artwork-shape {
+  display: none;
+}

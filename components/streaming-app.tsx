@@ -282,8 +282,6 @@ function Browse({
           <a href="#films">Films</a>
           <a href="#new">New & Popular</a>
           <a href="#list">My List</a>
-          <a href="/segmentation-lab">Perception Lab</a>
-          <a href="/sim-lab">Simulation Lab</a>
         </div>
         <div className="nav-actions">
           <div className={`search-box ${searchOpen ? "open" : ""}`}>

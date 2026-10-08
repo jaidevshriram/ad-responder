@@ -5,9 +5,12 @@ AssemblyAI Voice Agent. Browser contract: `docs/PROTOCOL.md` (ws://localhost:876
 
 ## Run
 
-    ~/esp-tools/bin/python -u voice/relay.py                 # plays on the reSpeaker
-    ~/esp-tools/bin/python -u voice/relay.py --out mac       # plays on MacBook Pro Speakers
-    ~/esp-tools/bin/python -u voice/relay.py --silent        # nothing audible (or RELAY_SILENT=1)
+    npm run relay                                   # from the repo root (.venv from npm run setup:voice)
+    .venv/bin/python -u voice/relay.py --silent     # nothing audible (or RELAY_SILENT=1)
+
+Devices are picked automatically: a reSpeaker XVF3800 if one is plugged in (open
+mic, it cancels its own playback), otherwise the Mac's default mic and speakers in
+push-to-talk mode. `--in`/`--out mac|respeaker` override; `--ptt` forces push-to-talk.
 
 Needs `ASSEMBLYAI_API_KEY=` in `voice/.env`. `voice/ad_script.json` (beats, facts,
 roleplay) and `voice/narration/<id>.wav` are re-read on every `ad.start`/session.

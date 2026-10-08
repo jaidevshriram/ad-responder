@@ -167,7 +167,7 @@ export function AdBreak({
           at,
           fallbackTimers.current,
         );
-        at += (beatSeconds(beat.line) + BEAT_GAP_S) * 1000;
+        at += (beatSeconds(beat.line) + BEAT_GAP_S + (beat.hold ?? 0)) * 1000;
       });
       later(() => handleRef.current({ type: "ad.end" }, "fallback"), at + TAIL_S * 1000, fallbackTimers.current);
     },
@@ -466,7 +466,7 @@ export function AdBreak({
           </div>
 
           {phase === "world" && (
-            <div className="ad-asks" aria-label="Ask the ad">
+            <div className={`ad-asks ${convo && !convo.leaving ? "busy" : ""}`} aria-label="Ask the ad">
               <button
                 type="button"
                 className={`ad-ask ad-hold ${holding ? "holding" : ""}`}

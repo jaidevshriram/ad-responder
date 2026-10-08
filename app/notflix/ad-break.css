@@ -467,8 +467,8 @@
 }
 .convo-user {
   max-width: 46ch;
-  color: var(--ad-dim);
-  font: 400 1.08rem / 1.4 var(--ad-sans);
+  color: var(--ad-ink);
+  font: 500 1.3rem / 1.4 var(--ad-sans);
 }
 .convo-user small {
   color: var(--ad-dim);
@@ -1047,4 +1047,11 @@
   background: #e2582b;
   border-color: #e2582b;
   box-shadow: 0 0 0 6px rgba(226, 88, 43, 0.22), 0 0 32px rgba(226, 88, 43, 0.45);
+}
+
+/* While the ad answers, the chips step aside so the captions have the floor;
+   the hold-to-talk button stays, so the viewer can cut in. */
+.ad-asks.busy .ad-ask:not(.ad-hold) {
+  opacity: 0;
+  pointer-events: none;
 }

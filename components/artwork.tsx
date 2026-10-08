@@ -17,7 +17,7 @@ export function Artwork({
 
   return (
     <div
-      className={`artwork artwork-${artwork.motif} ${className}`}
+      className={`artwork artwork-${artwork.motif} ${artwork.image ? "artwork-has-image" : ""} ${className}`}
       style={style}
       aria-hidden="true"
     >

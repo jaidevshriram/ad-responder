@@ -4,7 +4,7 @@
 
 import script from "@/voice/ad_script.json";
 
-export type AdBeat = { id: string; line: string; scene: string };
+export type AdBeat = { id: string; line: string; scene: string; hold?: number };
 
 export const adScript = script as {
   brand: string;
@@ -30,7 +30,7 @@ export function estimateAdSeconds(from = 0) {
   return (
     adScript.beats
       .slice(from)
-      .reduce((sum, beat) => sum + beatSeconds(beat.line) + BEAT_GAP_S, 0) +
+      .reduce((sum, beat) => sum + beatSeconds(beat.line) + BEAT_GAP_S + (beat.hold ?? 0), 0) +
     TAIL_S
   );
 }

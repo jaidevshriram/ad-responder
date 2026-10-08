@@ -7,32 +7,98 @@
     {
       "id": "b1",
       "line": "This is Amalfi.",
+      "hold": 2.5,
       "scene": "From 0 to 8 seconds, a sweeping drone shot over the pastel town of Positano and the turquoise bay in bright morning light."
     },
     {
       "id": "b2",
-      "line": "Mornings start slowly here. Lemon groves, sea air, coffee on a terrace.",
-      "scene": "From 0 to 8 seconds, the traveller walks through the Hilton lemon-grove garden, sunlight through the leaves, the sea glittering below."
+      "line": "Where the mountains fall straight into the sea, and the towns cling on in every colour.",
+      "hold": 2,
+      "scene": "From 0 to 8 seconds, the drone glides along the cliffs past pastel villages stacked above the water."
     },
     {
       "id": "b3",
-      "line": "By noon, the coast road is calling. Every bend, a new view.",
-      "scene": "From 0 to 8 seconds, the cream vintage convertible drives along the winding coast road around the cliff, the bay far below."
+      "line": "Mornings start slowly here.",
+      "hold": 1,
+      "scene": "From 0 to 8 seconds, inside the Hilton lobby, sunlight pours through tall windows with the sea beyond."
     },
     {
       "id": "b4",
-      "line": "Afternoons belong to the water. Take a boat, find your own cove.",
-      "scene": "From 0 to 8 seconds, a wooden boat leaves the harbour and crosses the turquoise bay toward a hidden cove under the cliffs."
+      "line": "Coffee on the terrace. Sfogliatelle, still warm. Lemon trees, and nothing on the schedule.",
+      "hold": 2.5,
+      "scene": "From 0 to 8 seconds, breakfast is served on the Hilton terrace beside the lemon trees, the bay glittering below."
     },
     {
       "id": "b5",
-      "line": "And every evening, you come home to Hilton, right above the bay.",
-      "scene": "From 0 to 8 seconds, the camera sweeps up to the Hilton infinity-pool terrace, white umbrellas over the bay, warm golden-hour light."
+      "line": "Walk down through the gardens, and the whole bay opens up below you.",
+      "hold": 2,
+      "scene": "From 0 to 8 seconds, the traveller walks through the Hilton lemon-grove garden toward the view of the bay."
     },
     {
       "id": "b6",
-      "line": "Hilton Amalfi Coast. Seven nights from twenty-four fifty. And if you're wondering about anything, just ask me.",
-      "scene": "From 0 to 8 seconds, a slow rising drone shot over the Hilton terrace, the harbour and the whole town in golden light."
+      "line": "By noon, the coast road is calling.",
+      "hold": 1,
+      "scene": "From 0 to 8 seconds, the cream vintage convertible pulls out onto the winding coast road."
+    },
+    {
+      "id": "b7",
+      "line": "Every bend, a new view. Every village, a reason to stop.",
+      "hold": 2.5,
+      "scene": "From 0 to 8 seconds, the cream vintage convertible rounds a bend on the cliff, a village far below."
+    },
+    {
+      "id": "b8",
+      "line": "Afternoons belong to the water.",
+      "hold": 1,
+      "scene": "From 0 to 8 seconds, rows of umbrellas and loungers on the beach club at Spiaggia Grande below the town."
+    },
+    {
+      "id": "b9",
+      "line": "Take a boat. Find your own cove. Swim somewhere with no name.",
+      "hold": 3,
+      "scene": "From 0 to 8 seconds, a wooden boat leaves the harbour and crosses the turquoise bay toward a hidden cove under the cliffs."
+    },
+    {
+      "id": "b10",
+      "line": "Capri is forty minutes away, if you feel like it. The Blue Grotto, if you feel like more.",
+      "hold": 2.5,
+      "scene": "From 0 to 8 seconds, the boat speeds toward the tall cliffs of Capri across the open sea."
+    },
+    {
+      "id": "b11",
+      "line": "And then, you come home.",
+      "hold": 1,
+      "scene": "From 0 to 8 seconds, the boat returns to the harbour, the Hilton on the cliff above."
+    },
+    {
+      "id": "b12",
+      "line": "Hilton Amalfi Coast. Seventy-four rooms, every one facing the sea.",
+      "hold": 2.5,
+      "scene": "From 0 to 8 seconds, the camera sweeps up the cliff to the Hilton infinity-pool terrace, white umbrellas over the bay."
+    },
+    {
+      "id": "b13",
+      "line": "The infinity pool catches the last of the light.",
+      "hold": 2.5,
+      "scene": "From 0 to 8 seconds, swimmers glide across the Hilton infinity pool in warm golden-hour light."
+    },
+    {
+      "id": "b14",
+      "line": "Then dinner on the rooftop at Terra, where evenings never hurry.",
+      "hold": 3,
+      "scene": "From 0 to 8 seconds, waiters set the tables on Terra, the Hilton rooftop restaurant, as the sky turns gold."
+    },
+    {
+      "id": "b15",
+      "line": "Seven nights, flights and breakfast included, from twenty-four fifty.",
+      "hold": 2,
+      "scene": "From 0 to 8 seconds, a slow rising drone shot over the Hilton terrace and the harbour in golden light."
+    },
+    {
+      "id": "b16",
+      "line": "Hilton Amalfi Coast. And if you're wondering about anything, just ask me.",
+      "hold": 3,
+      "scene": "From 0 to 8 seconds, a wide drone shot of the whole coast, Positano glowing above the bay."
     }
   ],
   "facts": {

@@ -34,7 +34,7 @@ export type Title = {
 };
 
 const bigBuckBunny =
-  "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4";
+  "https://archive.org/download/BBB-1080Pp/1080.ia.mp4";
 
 const sampleVideo =
   "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
@@ -57,6 +57,7 @@ export const titles: Title[] = [
     credit: "© Blender Foundation · peach.blender.org · CC BY 3.0",
     adBreak: true,
     artwork: {
+      image: "/art/big-buck-bunny.jpg",
       gradient:
         "radial-gradient(circle at 70% 30%, #f6e7a1 0, #9fc46a 22%, transparent 48%), linear-gradient(120deg, #0d1a0c 6%, #2f5a26 50%, #6f9a3e 100%)",
       accent: "#f6e7a1",
@@ -79,6 +80,7 @@ export const titles: Title[] = [
     badge: "New Series",
     progress: 63,
     artwork: {
+      image: "/art/monument-valley.jpg",
       gradient:
         "linear-gradient(178deg, transparent 46%, #190e09 47%), radial-gradient(circle at 64% 28%, #ffb968 0, #ca674d 21%, #311523 66%)",
       accent: "#ffb968",
@@ -100,6 +102,7 @@ export const titles: Title[] = [
     cast: ["Mika Tan", "Dante Cole", "Inez Park"],
     badge: "Recently Added",
     artwork: {
+      image: "/art/neon-runner.jpg",
       gradient:
         "radial-gradient(circle at 72% 42%, #ed4f99 0, transparent 13%), linear-gradient(128deg, #09051e 5%, #32207a 45%, #036c83 100%)",
       accent: "#f250a0",
@@ -120,6 +123,7 @@ export const titles: Title[] = [
     genres: ["Psychological", "Drama", "Suspense"],
     cast: ["Nora Vale", "Theo Mercer", "Aya Lin"],
     artwork: {
+      image: "/art/the-deepest-room.jpg",
       gradient:
         "radial-gradient(circle at 51% 18%, #a69bbf 0, transparent 22%), linear-gradient(140deg, #050608, #262b3a 45%, #0a0a0c)",
       accent: "#b9acd3",
@@ -142,6 +146,7 @@ export const titles: Title[] = [
     badge: "Top 10",
     progress: 27,
     artwork: {
+      image: "/art/afterlight.jpg",
       gradient:
         "radial-gradient(ellipse at 70% 82%, #f6a45f 0, #bd4d45 26%, transparent 52%), linear-gradient(120deg, #11172d, #312541 60%, #17101b)",
       accent: "#f6a45f",
@@ -162,6 +167,7 @@ export const titles: Title[] = [
     genres: ["Documentary", "Music", "Conspiracy"],
     cast: ["Luca Stern", "Bea Quinn", "Rafi Stone"],
     artwork: {
+      image: "/art/white-noise-club.jpg",
       gradient:
         "linear-gradient(118deg, #090909, #252525 55%, #8d1e25), repeating-linear-gradient(90deg, transparent 0 12px, #fff1 12px 13px)",
       accent: "#f0f0e8",
@@ -183,6 +189,7 @@ export const titles: Title[] = [
     cast: ["Lea Farrow", "Noah Reed", "Emi Watan"],
     progress: 81,
     artwork: {
+      image: "/art/glass-ocean.jpg",
       gradient:
         "radial-gradient(circle at 58% 55%, #82ecdf 0, transparent 21%), linear-gradient(135deg, #031721, #064d68 50%, #2a9a9b)",
       accent: "#82ecdf",
@@ -203,6 +210,7 @@ export const titles: Title[] = [
     genres: ["Family", "Fantasy", "Adventure"],
     cast: ["Anya Bell", "Mina Bell", "Oscar Finch"],
     artwork: {
+      image: "/art/paper-kingdom.jpg",
       gradient:
         "radial-gradient(circle at 68% 34%, #f2d08e 0, transparent 21%), linear-gradient(132deg, #23150e, #874a2e 58%, #cc8a5b)",
       accent: "#f2d08e",
@@ -224,6 +232,7 @@ export const titles: Title[] = [
     cast: ["Sora Wynn", "Malik Ross", "Nico Bell"],
     badge: "Critics' Pick",
     artwork: {
+      image: "/art/zero-hour.jpg",
       gradient:
         "radial-gradient(circle at 57% 49%, #ef525e 0, transparent 9%), conic-gradient(from 45deg at 57% 49%, #111 0 25%, #3b0d13 0 50%, #090909 0 75%, #701825 0)",
       accent: "#ef525e",
@@ -244,6 +253,7 @@ export const titles: Title[] = [
     genres: ["Eco-Thriller", "Sci-Fi", "Drama"],
     cast: ["Clara Moss", "Sven Holt", "Mara Liu"],
     artwork: {
+      image: "/art/the-bloom.jpg",
       gradient:
         "radial-gradient(circle at 67% 33%, #d2ef86 0, transparent 16%), linear-gradient(134deg, #07140d, #23613b 52%, #829a4d)",
       accent: "#d2ef86",
