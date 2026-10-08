@@ -1,0 +1,29 @@
+{
+  "name": "ad-responder",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "2.22.0",
+    "@reactor-models/happy-oyster": "^1.0.1",
+    "@reactor-team/js-sdk": "^3.0.2",
+    "hls.js": "1.6.13",
+    "lucide-react": "^0.468.0",
+    "next": "16.3.5",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}

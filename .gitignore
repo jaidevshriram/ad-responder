@@ -1,0 +1,17 @@
+.env.local
+.next/
+node_modules/
+npm-debug.log*
+*.tsbuildinfo
+.orbis-renders/
+.venv/
+__pycache__/
+data/
+
+# Local Netlify folder
+.netlify
+
+# voice relay
+voice/.env
+voice/*.jsonl
+.DS_Store
