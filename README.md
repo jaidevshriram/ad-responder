@@ -24,6 +24,20 @@ python3 -m venv ~/esp-tools && ~/esp-tools/bin/pip install websockets sounddevic
 ## Run
 
 ```bash
-~/esp-tools/bin/python voice/relay.py
+~/esp-tools/bin/python -u voice/relay.py --in mac --out mac   # MacBook mic + speakers
 npm run dev
 ```
+
+Open `/notflix`, play Big Buck Bunny, click **Prepare ad**, then **Start the ad**.
+During the ad, **hold Space** (or the on-screen button) to ask a question; the mic
+is push-to-talk because the laptop has no echo cancelling. The question chips
+along the bottom ask for you if the mic fails. `Esc` skips the ad, `D` opens the
+audio-check panel.
+
+Relay flags: `--in`/`--out mac|respeaker` pick the devices (a reSpeaker XVF3800
+cancels its own playback, so with it the mic can stay open); `--silent` discards
+output audio for tests (`voice/test_relay.py`).
+
+The agent's knowledge — facts, narration, question chips, world prompt — is in
+`voice/ad_script.json`; pricing, availability and scene fallbacks are in
+`voice/relay.py`.
