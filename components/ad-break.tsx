@@ -362,6 +362,40 @@ export function AdBreak({
     return () => window.removeEventListener("keydown", onKey);
   }, [skip, start]);
 
+  // Push to talk: hold Space (or the on-screen button) while the ad plays. The
+  // laptop mic has no echo cancelling, so the relay keeps it closed while the ad
+  // speaks; holding opens it and silences the ad at once.
+  const [holding, setHolding] = useState(false);
+  const setPtt = useCallback((down: boolean) => {
+    setHolding((was) => {
+      if (was !== down) relaySend({ type: "ptt", down });
+      return down;
+    });
+  }, []);
+  useEffect(() => {
+    const onDown = (event: KeyboardEvent) => {
+      if (event.code !== "Space" || phaseRef.current !== "world" || isTyping(event)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!event.repeat) setPtt(true);
+    };
+    const onUp = (event: KeyboardEvent) => {
+      if (event.code !== "Space") return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setPtt(false);
+    };
+    window.addEventListener("keydown", onDown, true);
+    window.addEventListener("keyup", onUp, true);
+    return () => {
+      window.removeEventListener("keydown", onDown, true);
+      window.removeEventListener("keyup", onUp, true);
+    };
+  }, [setPtt]);
+  useEffect(() => {
+    if (phase !== "world") setPtt(false);
+  }, [phase, setPtt]);
+
   // Leaving the player mid-ad: stop the audio and close the world session.
   useEffect(() => {
     const bag = timers.current;
@@ -433,6 +467,19 @@ export function AdBreak({
 
           {phase === "world" && (
             <div className="ad-asks" aria-label="Ask the ad">
+              <button
+                type="button"
+                className={`ad-ask ad-hold ${holding ? "holding" : ""}`}
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  setPtt(true);
+                }}
+                onPointerUp={() => setPtt(false)}
+                onPointerCancel={() => setPtt(false)}
+              >
+                <Mic size={14} strokeWidth={2.2} />
+                {holding ? "Listening — release to send" : "Hold Space to ask"}
+              </button>
               {(adScript.suggestions ?? []).map((question) => (
                 <button
                   key={question}

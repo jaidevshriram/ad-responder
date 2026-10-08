@@ -47,6 +47,16 @@ SILENT = "--silent" in sys.argv or os.environ.get("RELAY_SILENT") == "1"
 OUT = "respeaker"
 if "--out" in sys.argv and sys.argv.index("--out") + 1 < len(sys.argv):
     OUT = sys.argv[sys.argv.index("--out") + 1].lower()
+# --in mac|respeaker: microphone (default respeaker).
+IN = "respeaker"
+if "--in" in sys.argv and sys.argv.index("--in") + 1 < len(sys.argv):
+    IN = sys.argv[sys.argv.index("--in") + 1].lower()
+# Without the reSpeaker's echo cancelling, the mic hears our own playback. A
+# loudness threshold was tried and failed: at demo volume the MacBook mic hears
+# the narration louder than a voice, and an open mic in a busy room answers
+# bystanders. So the mic is strictly push-to-talk: open only while the viewer
+# holds (browser "ptt"); silence otherwise, which also lets each turn close.
+ECHO_GATE = IN == "mac" or "--gate" in sys.argv
 
 TOOL_NAMES = ("show_scene", "show_card", "resume_ad")
 _TOOL_RE = re.compile(r"\b(show[ _]?scene|show[ _]?card|resume[ _]?ad)\b[.,]?", re.I)
@@ -386,6 +396,7 @@ class Relay:
         self.recording: list | None = None
         self.inject: list[bytes] = []
         self.mic_muted = False             # debug.mute_mic: real mic -> silence
+        self.ptt = False                   # browser "ptt": viewer is holding to talk
         self.narration = {b["id"]: read_wav(NARR / f"{b['id']}.wav") for b in BEATS}
 
         self.agent_ws = None
@@ -479,6 +490,8 @@ class Relay:
 
     def open_audio(self):
         dev_in, dev_out = pick_device()
+        if IN == "mac":
+            dev_in = pick_device("MacBook Pro Microphone")[0]
         if OUT == "mac":
             dev_out = pick_device("MacBook Pro Speakers")[1]
         iin, iout = dev_info(dev_in, "input"), dev_info(dev_out, "output")
@@ -525,6 +538,10 @@ class Relay:
                     self.emit("debug.inject_done")
             elif not self.ad_active or self.mic_muted:
                 frame = silence
+            elif self.ptt:
+                pass                                   # holding to talk: open
+            elif ECHO_GATE:
+                frame = silence                        # push-to-talk only: closed
             ws = self.agent_ws
             if ws is not None and self.agent_state == "ready":
                 try:
@@ -850,6 +867,18 @@ class Relay:
             # exactly as if the viewer had said it. Everything downstream (tools,
             # scene, card, captions) runs unchanged.
             asyncio.create_task(self.ask(str(m.get("text", "")).strip()))
+        elif t == "ptt":
+            self.ptt = bool(m.get("down"))
+            if self.ptt:
+                # Holding to talk is an interruption: silence everything now
+                # rather than waiting for the agent to detect speech.
+                self.last_activity = time.monotonic()
+                self.reply_active = False
+                self.mixer.flush_agent()
+                if self.ad_active:
+                    self.mixer.fade_narration()
+                    self.interrupt.set()
+                    self.emit("listening")
         elif t == "debug.mute_mic":
             self.mic_muted = bool(m.get("mute", True))
         elif t == "debug.inject_audio":

@@ -1036,3 +1036,15 @@
   from { opacity: 0; transform: translate(-50%, 10px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
+.ad-hold {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-color: rgba(226, 88, 43, 0.75);
+  color: #fff;
+}
+.ad-hold.holding {
+  background: #e2582b;
+  border-color: #e2582b;
+  box-shadow: 0 0 0 6px rgba(226, 88, 43, 0.22), 0 0 32px rgba(226, 88, 43, 0.45);
+}
