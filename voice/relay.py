@@ -113,7 +113,7 @@ How you speak:
 - Sound like a natural part of the ad: warm, specific, using the exact figures from the facts.
 {unknown}
 - You can change what is on the viewer's screen. Whenever they want to see something, what a place looks like, a time of day, an activity, change the picture to show it while you answer, and speak as if it is appearing in front of them.
-- You have tools to look up hotel details and to price any stay. For a price for a specific number of nights or people, always work it out with the pricing tool first; for details you are unsure of, look them up first. Speak naturally while you do; never mention looking anything up.
+- You have tools to look up hotel details and to price any stay. For a price for a specific number of nights or people, always work it out with the pricing tool first; for dates or availability, check availability first; for details you are unsure of, look them up first. Speak naturally while you do; never mention looking anything up.
 - When you give a concrete fact such as a price, the dates, transport or what is included, also put it on screen as a short card.
 - When there is something to see, a place, the evening, a ferry on the water, a car on the coast road, change the picture as well.
 - When the viewer says carry on, continue, that's all, or thanks, say a brief warm goodbye and hand back to the ad.
@@ -176,6 +176,29 @@ def quote_price(args: dict) -> dict:
                         + (", private boat day to Capri" if nights >= 7 else "")}
 
 
+AVAILABILITY = {
+    "april": "Wide open: every room type, from 340 a night.",
+    "may": "Good availability; sea-view kings and terrace suites both open.",
+    "june": "Good availability, including sea-view kings and a few terrace suites. Book soon for Saturdays.",
+    "july": "Nearly full: a handful of sea-view twins left; the Villa Suite is waitlisted. Sunday and Wednesday arrivals are easier.",
+    "august": "Nearly full: two sea-view twins left mid-month; the last week of August has more space.",
+    "september": "Opens up again: plenty of sea-view kings and suites, and the best value of the summer.",
+    "october": "Wide open, warm days and quiet beaches; the pool stays heated until the end of the month.",
+}
+
+
+def check_availability(when: str) -> dict:
+    w = when.lower()
+    if "summer" in w:
+        months = ["june", "july", "august"]
+    else:
+        months = [m for m in AVAILABILITY if m in w or m[:3] in w]
+    if not months:
+        return {"when": when, "availability": "The resort is open April to October; outside that, "
+                "improvise warmly and suggest May or September."}
+    return {"when": when, "availability": {m.title(): AVAILABILITY[m] for m in months}}
+
+
 TOOLS = [
     {"type": "function", "name": "show_scene",
      "description": ("Change what the viewer sees in the ad. Use whenever they ask what "
@@ -217,6 +240,13 @@ TOOLS = [
          "travellers": {"type": "integer", "description": "Number of people, default 1."},
          "with_flights": {"type": "boolean", "description": "False for a hotel-only stay. Default true."}},
          "required": ["nights"]}},
+    {"type": "function", "name": "check_availability",
+     "description": ("Check room availability for a month or a season, e.g. 'is there "
+                     "space in July', 'availability this summer', 'can we come in August'."),
+     "parameters": {"type": "object", "properties": {
+         "when": {"type": "string", "description": "A month or season, e.g. 'July' or 'summer'."},
+         "nights": {"type": "integer", "description": "Length of stay, if mentioned."}},
+         "required": ["when"]}},
     {"type": "function", "name": "resume_ad",
      "description": ("Hand back to the ad. Use when the viewer says carry on, continue, "
                      "go on, keep going, that's all, ok thanks, or otherwise signals they "
@@ -647,6 +677,8 @@ class Relay:
             self.emit("lookup", topic=str(args.get("topic", "")), found=list(result.get("facts", {})))
         elif name == "quote_price":
             result = quote_price(args)
+        elif name == "check_availability":
+            result = check_availability(str(args.get("when", "")))
         ws = self.agent_ws
         if ws is not None:
             await ws.send(json.dumps({"type": "tool.result", "call_id": m.get("call_id"),
