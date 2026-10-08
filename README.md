@@ -7,7 +7,7 @@ agent answers in the same voice, and the picture changes to show you.
 
 ![The Hilton Amalfi Coast ad answering a price question, with a fact card](docs/screenshots/13-answer.webp)
 
-Project page: **[jaidevshriram.com/ad-responder](https://jaidevshriram.com/ad-responder/)** (GitHub Pages, from `docs/`).
+**[Watch the demo](https://jaidevshriram.com/ad-responder/)** (3½ minutes, with sound) on the project page, or download [`docs/demo.mp4`](docs/demo.mp4).
 
 ## What happens
 

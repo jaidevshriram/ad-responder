@@ -53,6 +53,9 @@ def _flag(name: str, default: str) -> str:
 # --in / --out  auto|mac|respeaker. "auto" (the default) uses a reSpeaker XVF3800
 # when one is plugged in and the Mac's own mic and speakers otherwise.
 IN = _flag("--in", "auto")
+# --record out.wav: also write everything the relay plays to a WAV (for demo
+# videos); out.wav.json holds the wall-clock time of its first sample.
+RECORD = _flag("--record", "")
 OUT = _flag("--out", "auto")
 # Without the reSpeaker's echo cancelling, the mic hears our own playback. A
 # loudness threshold was tried and failed: at demo volume the MacBook mic hears
@@ -517,6 +520,16 @@ class Relay:
     def on_speaker(self, outdata, frames, t, status):
         mono = self.mixer.pull(frames)
         outdata[:] = np.repeat(mono[:, None], outdata.shape[1], axis=1)
+        self.record(mono)
+
+    def record(self, pcm: np.ndarray):
+        if not RECORD:
+            return
+        if getattr(self, "rec_wav", None) is None:
+            self.rec_wav = wave.open(RECORD, "wb")
+            self.rec_wav.setnchannels(1); self.rec_wav.setsampwidth(2); self.rec_wav.setframerate(RATE)
+            Path(RECORD + ".json").write_text(json.dumps({"start": time.time()}))
+        self.rec_wav.writeframes(pcm.tobytes())
 
     def silent_clock(self):
         """--silent: pull the mixer on a 50 ms clock exactly as the speaker would,
@@ -524,7 +537,7 @@ class Relay:
         step = CHUNK / RATE
         nxt = time.monotonic()
         while True:
-            self.mixer.pull(CHUNK)
+            self.record(self.mixer.pull(CHUNK))
             nxt += step
             d = nxt - time.monotonic()
             if d > 0:

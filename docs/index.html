@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A travel ad you can interrupt: hold Space, ask it anything, and it answers out loud while a live world model changes the picture. AssemblyAI Voice Agent and Reactor HappyOyster.">
+<meta name="description" content="Ask a TV ad a question out loud. It answers in its own voice, and the picture changes to show you. Built with AssemblyAI's Voice Agent and Reactor's HappyOyster.">
 <title>The Ad That Listens</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -136,16 +136,31 @@ footer .wrap { display: grid; gap: 8px; }
   .hero figure { animation-delay: 0.16s; }
   @keyframes rise { from { transform: translateY(10px); } to { transform: none; } }
 }
+
+.film { display: grid; gap: 10px; }
+.film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 14px;
+  background: #000; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,0.55); }
+.moments { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(36px, 5vw, 64px); }
+.moment { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(20px, 3vw, 44px); align-items: center; }
+.moment .t { display: grid; gap: 10px; }
+.moment .n { font: 800 15px/1 var(--display); color: var(--accent); }
+.moment p { color: var(--dim); }
+.moment .say { color: var(--ink); font: 700 19px/1.35 var(--display); letter-spacing: -0.01em; }
+@media (max-width: 820px) { .moment { grid-template-columns: 1fr; } }
+.why { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 40px); }
+.why p { color: var(--dim); }
+@media (max-width: 820px) { .why { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { header.top nav { display: none; } }
 </style>
+
 </head>
 <body>
 <header class="top wrap">
   <span class="mark">NOTFLIX</span>
   <nav>
-    <a href="#run">The run</a>
-    <a href="#ask">Ask it</a>
-    <a href="#reactor">Reactor</a>
     <a href="#how">How it works</a>
+    <a href="#built">How it’s built</a>
+    <a href="#reactor">The video model</a>
     <a href="#mac">Run it</a>
   </nav>
 </header>
@@ -153,192 +168,11 @@ footer .wrap { display: grid; gap: 8px; }
 <section class="hero">
   <div class="wrap">
     <h1>The ad that <i>listens.</i></h1>
-    <p class="lede">A travel ad you can interrupt. A show plays on NotFlix, and at the ad break a live, AI-generated Amalfi Coast appears with a narrator. <strong>Hold Space and ask it something.</strong> The narration stops, the ad answers out loud in the same voice, and the world on screen moves to show you.</p>
-    <figure class="shot-big">
-      <img src="screenshots/13-answer-960.webp" srcset="screenshots/13-answer-960.webp 960w, screenshots/13-answer.webp 1920w" sizes="(max-width: 1240px) 100vw, 1160px" width="1920" height="1080" fetchpriority="high" decoding="async" alt="The Hilton Amalfi Coast ad: a guest on a breakfast terrace over the bay, a fact card reading Three night package, from $1,290 per person, and the spoken answer as a caption">
-      <figcaption><b>“How much is it for three nights?”</b> The answer is spoken, captioned, and put on a card. The world is the hotel’s breakfast terrace above the bay.</figcaption>
+    <p class="lede">Ask a TV ad a question out loud. It answers you in its own voice, and the picture changes to show you.</p>
+    <figure class="film">
+      <video controls playsinline preload="metadata" poster="screenshots/13-answer-960.webp" src="demo.mp4"></video>
+      <figcaption>A full ad break, recorded on a MacBook. Sound on: the questions are spoken, and the ad answers out loud.</figcaption>
     </figure>
-  </div>
-</section>
-
-<section id="run">
-  <div class="wrap">
-    <div class="col" style="display:grid; gap:14px">
-      <span class="label">The run</span>
-      <h2>One ad break, start to finish.</h2>
-      <p class="lede">These are frames from one real run on a MacBook. The questions were spoken into the voice agent; nothing below is mocked.</p>
-    </div>
-    <ol class="steps">
-      <li class="step">
-        <div class="t"><span class="clock">0:00</span><h3>A show is playing</h3><p>NotFlix is a Netflix-style streaming app. The show is Big Buck Bunny, the Blender Foundation’s open film.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/01-home-960.webp" srcset="screenshots/01-home-960.webp 960w, screenshots/01-home.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="NotFlix home page with Big Buck Bunny as the featured title"></figure>
-          <figure><img src="screenshots/03-watching-960.webp" srcset="screenshots/03-watching-960.webp 960w, screenshots/03-watching.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The NotFlix player playing Big Buck Bunny"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">0:13</span><h3>The ad gets ready in the background</h3><p>While the show plays, the app opens a world-model session and the voice agent. <b>Start the ad</b> lights up only when the world is already streaming, so the break never shows a loading screen.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/04-preparing-960.webp" srcset="screenshots/04-preparing-960.webp 960w, screenshots/04-preparing.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The player with a Preparing ad status"></figure>
-          <figure><img src="screenshots/05-ready-960.webp" srcset="screenshots/05-ready-960.webp 960w, screenshots/05-ready.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The player with the Start the ad button lit"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">0:14</span><h3>The break</h3><p>The show eases back, a bumper says the ad listens, and the live world fades in.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/06-transition-960.webp" srcset="screenshots/06-transition-960.webp 960w, screenshots/06-transition.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The show shrinking away into the ad break"></figure>
-          <figure><img src="screenshots/07-bumper-960.webp" srcset="screenshots/07-bumper-960.webp 960w, screenshots/07-bumper.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Ad bumper: brought to you by Hilton, this ad listens, just ask"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">0:24</span><h3>The narration</h3><p>Sixteen scripted lines, about two minutes. Each line carries a shot direction, so the world moves through a day on the coast: the lobby, breakfast, the coast road, a boat, the pool, the rooftop.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/08-narration-960.webp" srcset="screenshots/08-narration-960.webp 960w, screenshots/08-narration.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Inside the Hilton lobby with the narration as a subtitle and question chips along the bottom"></figure>
-          <figure><img src="screenshots/09-breakfast-960.webp" srcset="screenshots/09-breakfast-960.webp 960w, screenshots/09-breakfast.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Breakfast on the Hilton terrace"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">0:46</span><h3>You interrupt</h3><p>Holding Space opens the mic and stops the narration at once. Your words appear on screen as you say them.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/10-listening-960.webp" srcset="screenshots/10-listening-960.webp 960w, screenshots/10-listening.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The ad listening, narration stopped"></figure>
-          <figure><img src="screenshots/11-question-960.webp" srcset="screenshots/11-question-960.webp 960w, screenshots/11-question.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The question How much is it for three nights shown as a caption"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">0:50</span><h3>It answers, and the picture changes</h3><p>The agent prices the stay with a tool, says it, puts a card up, and sends the world a new shot. Then the narration picks up at the next line.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/13-answer-960.webp" srcset="screenshots/13-answer-960.webp 960w, screenshots/13-answer.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The spoken answer as a caption"></figure>
-          <figure><img src="screenshots/14-price-scene-960.webp" srcset="screenshots/14-price-scene-960.webp 960w, screenshots/14-price-scene.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The world after the answer"></figure>
-        </div>
-      </li>
-      <li class="step">
-        <div class="t"><span class="clock">3:03</span><h3>Back to the show</h3><p>With three questions asked, this break ran just under three minutes. When the script ends and nobody is talking, an end card shows and the show resumes where it stopped.</p></div>
-        <div class="pair">
-          <figure><img src="screenshots/27-end-card-960.webp" srcset="screenshots/27-end-card-960.webp 960w, screenshots/27-end-card.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Ad end card"></figure>
-          <figure><img src="screenshots/28-back-to-show-960.webp" srcset="screenshots/28-back-to-show-960.webp 960w, screenshots/28-back-to-show.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Big Buck Bunny playing again"></figure>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-
-<section id="day">
-  <div class="wrap">
-    <div class="col" style="display:grid; gap:14px">
-      <span class="label">The script</span>
-      <h2>A day on the coast, in sixteen lines.</h2>
-      <p class="lede">Each narration line comes with a shot direction for the world model. With nobody asking anything, the ad walks through a day: breakfast, the coast road, a boat to Capri, the pool at golden hour, dinner on the rooftop.</p>
-    </div>
-    <div class="grid3">
-      <figure><img src="screenshots/09-breakfast-960.webp" srcset="screenshots/09-breakfast-960.webp 960w, screenshots/09-breakfast.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Breakfast on the Hilton terrace among lemon trees"><figcaption>“Coffee on the terrace. Sfogliatelle, still warm.”</figcaption></figure>
-      <figure><img src="screenshots/15-coast-road-960.webp" srcset="screenshots/15-coast-road-960.webp 960w, screenshots/15-coast-road.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="A guest stepping onto the balcony of a sea-view room"><figcaption>“Every bend, a new view. Every village, a reason to stop.”</figcaption></figure>
-      <figure><img src="screenshots/20-boat-960.webp" srcset="screenshots/20-boat-960.webp 960w, screenshots/20-boat.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="A boat under the cliffs of Capri"><figcaption>“Capri is forty minutes away, if you feel like it.”</figcaption></figure>
-      <figure><img src="screenshots/23-pool-960.webp" srcset="screenshots/23-pool-960.webp 960w, screenshots/23-pool.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The coast and the harbour wall in late light"><figcaption>“The infinity pool catches the last of the light.”</figcaption></figure>
-      <figure><img src="screenshots/26-rooftop-960.webp" srcset="screenshots/26-rooftop-960.webp 960w, screenshots/26-rooftop.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Waiters setting tables on the terrace at golden hour"><figcaption>“Hilton Amalfi Coast. And if you’re wondering about anything, just ask me.”</figcaption></figure>
-      <figure><img src="screenshots/02-catalogue-960.webp" srcset="screenshots/02-catalogue-960.webp 960w, screenshots/02-catalogue.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The NotFlix catalogue"><figcaption>Then back to NotFlix.</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<section id="ask">
-  <div class="wrap">
-    <div class="col" style="display:grid; gap:14px">
-      <span class="label">Ask it</span>
-      <h2>Every answer moves the <i>picture.</i></h2>
-      <p class="lede">The agent picks a shot for each answer and sends it to the world model as a one-line direction. The world takes four to eight seconds to get there, so it changes while the answer is still being spoken.</p>
-    </div>
-
-    <div class="qa">
-      <p class="q">What’s it like there at night?</p>
-      <div class="meta"><span class="chip tool">show_scene</span><span class="chip">“Night falls over the harbour, lanterns glow on the Terra rooftop.”</span></div>
-      <div class="pair">
-        <figure><img src="screenshots/16-night-question-960.webp" srcset="screenshots/16-night-question-960.webp 960w, screenshots/16-night-question.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The night question as a caption, daytime world"><figcaption><b>Asked</b> on the coast road, in full daylight.</figcaption></figure>
-        <figure><img src="screenshots/19-night-later-960.webp" srcset="screenshots/19-night-later-960.webp 960w, screenshots/19-night-later.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The harbour at dusk with a lighthouse and the town lights on"><figcaption><b>Seconds later,</b> dusk over the harbour, the lights coming on.</figcaption></figure>
-      </div>
-    </div>
-
-    <div class="qa">
-      <p class="q">Do you provide transport?</p>
-      <div class="meta"><span class="chip tool">lookup_hotel_info</span><span class="chip tool">show_card</span><span class="chip tool">show_scene</span></div>
-      <div class="pair">
-        <figure><img src="screenshots/21-transport-answer-960.webp" srcset="screenshots/21-transport-answer-960.webp 960w, screenshots/21-transport-answer.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The transport answer with a fact card"><figcaption><b>The answer</b> with a card: private airport transfers included. The world heads out by boat.</figcaption></figure>
-        <figure><img src="screenshots/22-transport-scene-960.webp" srcset="screenshots/22-transport-scene-960.webp 960w, screenshots/22-transport-scene.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The world after the transport answer"><figcaption><b>Then the coast road,</b> the convertible passing under the hotel.</figcaption></figure>
-      </div>
-    </div>
-
-    <div class="qa">
-      <p class="q">How much is it for three nights?</p>
-      <div class="meta"><span class="chip tool">quote_price</span><span class="chip tool">show_card</span><span class="chip tool">show_scene</span></div>
-      <div class="pair">
-        <figure><img src="screenshots/12-price-card-960.webp" srcset="screenshots/12-price-card-960.webp 960w, screenshots/12-price-card.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Price card for three nights"><figcaption><b>Priced by a tool,</b> so the number is always the same: from $1,290 per person.</figcaption></figure>
-        <figure><img src="screenshots/14-price-scene-960.webp" srcset="screenshots/14-price-scene-960.webp 960w, screenshots/14-price-scene.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The world after the price answer"><figcaption><b>Then the picture follows,</b> into a sea-view room.</figcaption></figure>
-      </div>
-    </div>
-
-    <div class="two">
-      <figure><img src="screenshots/24-hold-to-talk-960.webp" srcset="screenshots/24-hold-to-talk-960.webp 960w, screenshots/24-hold-to-talk.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The Hold Space to ask button lit while the viewer talks"><figcaption><b>Push to talk.</b> A laptop has no echo cancelling: an open mic hears the ad and answers itself. The mic is open only while you hold Space or the on-screen button.</figcaption></figure>
-      <figure><img src="screenshots/25-audio-panel-960.webp" srcset="screenshots/25-audio-panel-960.webp 960w, screenshots/25-audio-panel.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The audio check panel"><figcaption><b>Audio check.</b> Press D for devices, levels, a speaker test and a mic test that transcribes what it heard.</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-
-<section id="reactor">
-  <div class="wrap">
-    <div class="col" style="display:grid; gap:14px">
-      <span class="label">Reactor</span>
-      <h2>A world you <i>direct</i> while it plays.</h2>
-      <p class="lede">HappyOyster, on Reactor, is a world model: it generates video live, frame after frame, and keeps generating for minutes. In its Directing mode you can send it a line of text at any moment and the next few seconds of video follow it.</p>
-    </div>
-
-    <div class="flow" style="grid-template-columns: repeat(4, minmax(0, 1fr))">
-      <div class="node"><span class="label">Once · 2–3 min</span><h3>Create a world</h3><p>A prompt of up to 2,000 characters becomes a permanent world on your account. We keep its id and reuse it.</p></div>
-      <div class="node"><span class="label">Each break · 6 s</span><h3>Open a session</h3><p>The server opens the session with the API key and gives the browser a token bound to that one session.</p></div>
-      <div class="node"><span class="label">13 s to first frame</span><h3>Travel</h3><p>Reopen the world and start a “travel”: video streams into a normal &lt;video&gt; element over WebRTC.</p></div>
-      <div class="node hot"><span class="label">0.2 s · seen in 4–8 s</span><h3>Instruct</h3><p>Send a line of text. The world plans in blocks of about four seconds, so the change lands on the next block or two.</p></div>
-    </div>
-
-    <div class="col" style="display:grid; gap:14px">
-      <h3>The first world ignored us</h3>
-      <p class="lede" style="font-size:17px">Our first prompt described a pretty coast, with the calmest settings. We sent it “night falls, lanterns glow along the harbour”. It accepted the instruction and kept wandering through a sunny garden toward a lemon.</p>
-    </div>
-    <figure class="strip"><img src="screenshots/reactor-v1-960.webp" srcset="screenshots/reactor-v1-960.webp 960w, screenshots/reactor-v1.webp 1458w" sizes="(max-width: 1240px) 100vw, 1160px" width="1458" height="264" loading="lazy" decoding="async" alt="Three frames of a sunny garden, before and after a night-time instruction, with no change"><figcaption><b>World 1, after “night falls”.</b> Accepted, executed, and nothing visible changed.</figcaption></figure>
-
-    <div class="col" style="display:grid; gap:14px">
-      <h3>What made it follow</h3>
-      <p class="lede" style="font-size:17px">Reactor’s prompt guide says instructions can change place and time of day inside a world, and that they work best when they point at things the world prompt already named. So we rebuilt the world around that.</p>
-    </div>
-    <div class="two">
-      <div class="table">
-        <table>
-          <tr><th>Change</th><th>Why</th></tr>
-          <tr><td>Named landmarks in the world prompt: the Hilton lobby, the infinity-pool terrace, the Terra rooftop, the lemon garden, the harbour and ferry pier, the coast road with a cream convertible.</td><td>An instruction can only steer toward things the world already knows. Every scene in the ad names one of them.</td></tr>
-          <tr><td>The day-to-night arc written into the prompt: morning, golden hour, a lantern-lit night.</td><td>“Night falls” becomes a move the world was built to make, not a request from nowhere.</td></tr>
-          <tr><td><code>narrative: "Dramatic"</code> and <code>layout: "Fast"</code> instead of Calm and Stable.</td><td>Calm and Stable hold the camera and the story still, which also holds off changes.</td></tr>
-          <tr><td>Every instruction starts “From 0 to 8 seconds, …”, with one action and one place.</td><td>An explicit window makes the world commit to the change within two blocks instead of drifting back.</td></tr>
-          <tr><td>A fallback shot for every answer, picked from keywords in the question.</td><td>The voice agent does not always ask for a scene. The picture should move every time.</td></tr>
-        </table>
-      </div>
-      <div style="display:grid; gap:12px; min-width:0">
-        <span class="label">The world prompt</span>
-        <pre style="white-space: pre-wrap">Photoreal travel commercial, shot on a gimbal and a drone, 35mm film look. You are a traveller arriving at Hilton Amalfi Coast, a cliffside resort above the pastel town of Positano. Recurring landmarks: the Hilton infinity-pool terrace with white umbrellas over the turquoise bay; Terra, the Hilton rooftop restaurant strung with warm lights; the lemon-grove garden; the harbour of wooden boats and the ferry pier; the winding coast road where a cream vintage convertible drives along the cliff. The world moves through the day: bright morning, golden hour, then a lantern-lit night when the whole town glows over the dark water. Boats come and go, waiters set the rooftop tables, swimmers glide across the infinity pool, the ferry crosses the bay. Warm Mediterranean sunlight, glossy turquoise water, terracotta and lemon-yellow textures, sea spray, fast sweeping drone moves and tracking shots.</pre>
-        <span class="label">An instruction the agent sent</span>
-        <pre style="white-space: pre-wrap">From 0 to 8 seconds, night falls over the harbour, lanterns glow on the Terra rooftop.</pre>
-      </div>
-    </div>
-    <figure class="strip"><img src="screenshots/reactor-v2-960.webp" srcset="screenshots/reactor-v2-960.webp 960w, screenshots/reactor-v2.webp 1458w" sizes="(max-width: 1240px) 100vw, 1160px" width="1458" height="264" loading="lazy" decoding="async" alt="Three frames: a bright drone shot of the pool, a guest on the terrace at dusk, the hotel lit at night"><figcaption><b>World 2, same kind of instruction.</b> From a bright drone shot of the pool, to dusk on the terrace, to night with the Hilton sign lit, in about twenty seconds.</figcaption></figure>
-
-    <div class="two">
-      <div style="display:grid; gap:12px">
-        <h3>What did not work</h3>
-        <p class="lede" style="font-size:17px">Pause and resume do nothing for this world, so the ad never pauses the video: the narration pauses, and the world keeps moving under the conversation. Reactor’s guide also says an instruction cannot take the world somewhere it was not built to contain, so the agent is only offered shots of the coast’s own landmarks.</p>
-      </div>
-      <div style="display:grid; gap:12px">
-        <h3>Limits to plan around</h3>
-        <p class="lede" style="font-size:17px">A directing travel lasts about three minutes, which sets the length of the ad and its conversation. A browser cannot open a session with its own token, so the server opens it and hands over a token bound to that session.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -346,57 +180,146 @@ footer .wrap { display: grid; gap: 8px; }
   <div class="wrap">
     <div class="col" style="display:grid; gap:14px">
       <span class="label">How it works</span>
-      <h2>Two programs, three services.</h2>
-      <p class="lede">A small Python relay owns all the audio. The streaming app owns all the pictures. They talk over one local WebSocket.</p>
+      <h2>You’re watching a show. An ad comes on. You talk to it.</h2>
+      <p class="lede">The demo is a Netflix-style app we call NotFlix, playing a short film. The ad is for a made-up Hilton stay on the Amalfi Coast.</p>
+    </div>
+    <ol class="moments">
+      <li class="moment">
+        <div class="t"><span class="n">1</span><h3>The ad break starts</h3><p>The show steps aside and the ad begins: a narrator over live video of the coast. A note in the corner says the ad is listening.</p></div>
+        <figure><img src="screenshots/08-narration-960.webp" srcset="screenshots/08-narration-960.webp 960w, screenshots/08-narration.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The ad: inside a hotel lobby overlooking the sea, with the narration as a subtitle and question suggestions along the bottom"></figure>
+      </li>
+      <li class="moment">
+        <div class="t"><span class="n">2</span><h3>You ask</h3><p class="say">“How much is it for three nights?”</p><p>Hold the space bar and speak. The narrator stops, and the answer comes back in the same voice. The price goes up on a card.</p></div>
+        <figure><img src="screenshots/11-question-960.webp" srcset="screenshots/11-question-960.webp 960w, screenshots/11-question.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The question How much is it for 3 nights shown on screen while the ad listens"></figure>
+      </li>
+      <li class="moment">
+        <div class="t"><span class="n">3</span><h3>The picture answers too</h3><p class="say">“What’s it like there at night?”</p><p>The video moves to show what you asked about. Here, a sunny road turns into the harbour at dusk, a few seconds after the question.</p></div>
+        <div class="pair">
+          <figure><img src="screenshots/16-night-question-960.webp" srcset="screenshots/16-night-question-960.webp 960w, screenshots/16-night-question.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="Daytime: a car on a coast road, with the question as a caption"><figcaption>Asked</figcaption></figure>
+          <figure><img src="screenshots/19-night-later-960.webp" srcset="screenshots/19-night-later-960.webp 960w, screenshots/19-night-later.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The harbour at dusk with the lights coming on"><figcaption>Seconds later</figcaption></figure>
+        </div>
+      </li>
+      <li class="moment">
+        <div class="t"><span class="n">4</span><h3>Then the show comes back</h3><p>When you’re done, say “carry on”, or just stay quiet. The ad finishes and the show picks up where it stopped.</p></div>
+        <figure><img src="screenshots/03-watching-960.webp" srcset="screenshots/03-watching-960.webp 960w, screenshots/03-watching.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The film playing in the NotFlix player"></figure>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="col" style="display:grid; gap:14px">
+      <span class="label">More questions</span>
+      <h2>Every answer comes with a new <i>shot.</i></h2>
+    </div>
+    <div class="qa">
+      <p class="q">Do you provide transport?</p>
+      <div class="pair">
+        <figure><img src="screenshots/21-transport-answer-960.webp" srcset="screenshots/21-transport-answer-960.webp 960w, screenshots/21-transport-answer.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The ad answering the transport question, a boat at sea, with a card about included transfers"><figcaption><b>The answer:</b> a private driver from the airport is included. A card says so.</figcaption></figure>
+        <figure><img src="screenshots/22-transport-scene-960.webp" srcset="screenshots/22-transport-scene-960.webp 960w, screenshots/22-transport-scene.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="A cream convertible on a coast road below a cliffside hotel"><figcaption><b>The shot:</b> the drive along the coast road.</figcaption></figure>
+      </div>
+    </div>
+    <div class="qa">
+      <p class="q">How much is it for three nights?</p>
+      <div class="pair">
+        <figure><img src="screenshots/12-price-card-960.webp" srcset="screenshots/12-price-card-960.webp 960w, screenshots/12-price-card.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The price card on screen over a breakfast terrace"><figcaption><b>The answer:</b> from $1,290 per person, flights included.</figcaption></figure>
+        <figure><img src="screenshots/14-price-scene-960.webp" srcset="screenshots/14-price-scene-960.webp 960w, screenshots/14-price-scene.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="A sea-view hotel room"><figcaption><b>The shot:</b> one of the rooms.</figcaption></figure>
+      </div>
+    </div>
+    <div class="why">
+      <div><h3>Why</h3><p>An ad catches you at the moment you’re curious, then gives you no way to ask. This one does, and it answers with the specifics you asked for.</p></div>
+      <div><h3>For the advertiser</h3><p>Every question is a signal no click gives you: what people wanted to know, and what they wanted to see.</p></div>
+      <div><h3>No loading screen</h3><p>The ad’s video is started in the background while the show is still playing, so the break cuts straight to it.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="built">
+  <div class="wrap">
+    <div class="col" style="display:grid; gap:14px">
+      <span class="label">How it’s built</span>
+      <h2>A voice agent that can steer a video model.</h2>
+      <p class="lede">Two programs run on the laptop. A small Python program handles all the sound. The streaming app handles all the pictures. They talk to each other over a local connection.</p>
     </div>
     <div class="flow">
-      <div class="node"><span class="label">Mac</span><h3>Mic and speakers</h3><p>Built-in mic, push to talk. Any mic works; a reSpeaker array is picked up automatically.</p></div>
-      <div class="node hot"><span class="label">Python</span><h3>Voice relay</h3><p>Plays the narration, streams your voice while you hold Space, plays the answers, forwards tool calls.</p></div>
-      <div class="node"><span class="label">AssemblyAI</span><h3>Voice Agent</h3><p>Speech in, answer out, in the narrator’s voice. Calls tools to look things up and to steer the ad.</p></div>
-      <div class="node hot"><span class="label">Next.js</span><h3>NotFlix</h3><p>The show, the break, captions, cards. Turns each scene tool call into a world instruction.</p></div>
-      <div class="node"><span class="label">Reactor</span><h3>HappyOyster</h3><p>A world model that streams live video and follows text directions while it plays.</p></div>
+      <div class="node"><span class="label">Your Mac</span><h3>Mic and speakers</h3><p>The built-in ones. The mic only listens while you hold the space bar.</p></div>
+      <div class="node hot"><span class="label">Python</span><h3>Voice relay</h3><p>Plays the narrator, sends your voice to the agent, plays its answers, and passes its requests to the app.</p></div>
+      <div class="node"><span class="label">AssemblyAI</span><h3>Voice Agent</h3><p>Hears the question, answers out loud, and uses tools to look things up and to change what’s on screen.</p></div>
+      <div class="node hot"><span class="label">Next.js</span><h3>NotFlix</h3><p>The streaming app: the show, the ad, the captions and the cards.</p></div>
+      <div class="node"><span class="label">Reactor</span><h3>HappyOyster</h3><p>A video model that generates the ad live and follows written directions as it plays.</p></div>
     </div>
-
     <div class="two">
       <div style="display:grid; gap:14px">
-        <h3>The agent’s tools</h3>
+        <h3>What the agent can do</h3>
         <div class="table">
           <table>
-            <tr><th>Tool</th><th>What it does</th></tr>
-            <tr><td><code>lookup_hotel_info</code></td><td>Finds the facts about a topic: rooms, beach, spa, transport, nearby sights.</td></tr>
-            <tr><td><code>quote_price</code></td><td>Prices any stay by nights and people.</td></tr>
-            <tr><td><code>check_availability</code></td><td>Availability by month or season.</td></tr>
-            <tr><td><code>show_scene</code></td><td>Sends the world a new shot.</td></tr>
-            <tr><td><code>show_card</code></td><td>Puts a fact on screen.</td></tr>
-            <tr><td><code>resume_ad</code></td><td>Hands back to the narration.</td></tr>
+            <tr><th>Tool</th><th>Used for</th></tr>
+            <tr><td><code>lookup_hotel_info</code></td><td>Rooms, beach, spa, transport, things to do nearby</td></tr>
+            <tr><td><code>quote_price</code></td><td>The price of any stay, so numbers never drift</td></tr>
+            <tr><td><code>check_availability</code></td><td>Which months still have rooms</td></tr>
+            <tr><td><code>show_scene</code></td><td>A new shot for the video</td></tr>
+            <tr><td><code>show_card</code></td><td>A fact on screen</td></tr>
+            <tr><td><code>resume_ad</code></td><td>Back to the narrator</td></tr>
           </table>
         </div>
       </div>
       <div style="display:grid; gap:14px">
-        <h3>Measured on a MacBook</h3>
-        <div class="table">
-          <table>
-            <tr><th>Step</th><th>Time</th></tr>
-            <tr><td>Build the Amalfi world, once</td><td class="num">138 s</td></tr>
-            <tr><td>Open a session and reopen the world</td><td class="num">6 s</td></tr>
-            <tr><td>First video frame</td><td class="num">13 s</td></tr>
-            <tr><td>World accepts a direction</td><td class="num">0.2 s</td></tr>
-            <tr><td>Direction visible on screen</td><td class="num">4–8 s</td></tr>
-            <tr><td>Answer starts after you stop talking</td><td class="num">2.6–4.6 s</td></tr>
-          </table>
-        </div>
+        <h3>Why you hold the space bar</h3>
+        <p class="lede" style="font-size:17px">A laptop has no echo cancelling. With the mic always open, it hears the ad through the speakers and the ad starts answering itself, and in a busy room it answers whoever is talking nearby. Push to talk solves both. With a mic array that cancels its own playback, like the reSpeaker we tried first, the mic can stay open.</p>
+        <figure><img src="screenshots/24-hold-to-talk-960.webp" srcset="screenshots/24-hold-to-talk-960.webp 960w, screenshots/24-hold-to-talk.webp 1920w" sizes="(max-width: 820px) 100vw, 580px" width="1920" height="1080" loading="lazy" decoding="async" alt="The hold-to-talk button lit while the viewer speaks"></figure>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="reactor">
+  <div class="wrap">
+    <div class="col" style="display:grid; gap:14px">
+      <span class="label">The video model</span>
+      <h2>Getting the video to <i>follow.</i></h2>
+      <p class="lede">HappyOyster, on Reactor, generates video live and keeps going for a few minutes. You can send it a line of text at any point, and the next few seconds of video follow it. Getting it to follow reliably took two tries.</p>
     </div>
 
     <div class="two">
       <div style="display:grid; gap:12px">
-        <h3>Why the world never shows a loading screen</h3>
-        <p class="lede" style="font-size:17px">Building the world takes over two minutes, so it is built once and its id saved. Each ad break reopens it and starts streaming into a hidden video element while the show is still playing. The break only begins once frames are arriving.</p>
+        <h3>Try one: it ignored us</h3>
+        <p class="lede" style="font-size:17px">The first world was described loosely, with the calmest settings. We told it “night falls”. It accepted the instruction and kept strolling through a sunny garden.</p>
       </div>
       <div style="display:grid; gap:12px">
-        <h3>Why every answer changes the picture</h3>
-        <p class="lede" style="font-size:17px">The agent is asked to pick a shot for every answer. If a reply starts without one, the relay picks the landmark that best fits the question: a price shows a sea-view room, transport shows the coast road, nearby sights show a boat to Capri.</p>
+        <h3>Try two: it followed</h3>
+        <p class="lede" style="font-size:17px">We rebuilt the world around named places, wrote day and night into it, and made every direction short and specific. Now “night falls” works.</p>
       </div>
+    </div>
+    <figure class="strip"><img src="screenshots/reactor-v1-960.webp" srcset="screenshots/reactor-v1-960.webp 960w, screenshots/reactor-v1.webp 1458w" sizes="(max-width: 1240px) 100vw, 1160px" width="1458" height="267" loading="lazy" decoding="async" alt="Three frames of a sunny garden after a night-time instruction: nothing changes"><figcaption><b>Try one,</b> after “night falls”: still daylight.</figcaption></figure>
+    <figure class="strip"><img src="screenshots/reactor-v2-960.webp" srcset="screenshots/reactor-v2-960.webp 960w, screenshots/reactor-v2.webp 1458w" sizes="(max-width: 1240px) 100vw, 1160px" width="1458" height="267" loading="lazy" decoding="async" alt="Three frames: a bright pool, then dusk on a terrace, then the hotel lit at night"><figcaption><b>Try two:</b> day, dusk, then night, in about twenty seconds.</figcaption></figure>
+
+    <div class="two">
+      <div class="table">
+        <table>
+          <tr><th>What we changed</th><th>Why it helped</th></tr>
+          <tr><td>Named the places in the world: the lobby, the pool terrace, the rooftop restaurant, the garden, the harbour, the coast road.</td><td>A direction can only move the video toward something the world already has.</td></tr>
+          <tr><td>Wrote the day into it: morning, golden hour, a lantern-lit night.</td><td>“Night falls” becomes a move the world expects.</td></tr>
+          <tr><td>Chose the livelier settings, “Dramatic” and “Fast”.</td><td>The calm settings hold the camera still, and hold off changes too.</td></tr>
+          <tr><td>Started every direction with “From 0 to 8 seconds,” and kept it to one action in one place.</td><td>A time window makes the change land within a few seconds instead of drifting.</td></tr>
+          <tr><td>Picked a fallback shot whenever the agent didn’t ask for one.</td><td>So every answer changes the picture.</td></tr>
+        </table>
+      </div>
+      <div style="display:grid; gap:12px; min-width:0">
+        <span class="label">The world description</span>
+        <pre style="white-space: pre-wrap">Photoreal travel commercial, shot on a gimbal and a drone, 35mm film look. You are a traveller arriving at Hilton Amalfi Coast, a cliffside resort above the pastel town of Positano. Recurring landmarks: the Hilton infinity-pool terrace with white umbrellas over the turquoise bay; Terra, the Hilton rooftop restaurant strung with warm lights; the lemon-grove garden; the harbour of wooden boats and the ferry pier; the winding coast road where a cream vintage convertible drives along the cliff. The world moves through the day: bright morning, golden hour, then a lantern-lit night when the whole town glows over the dark water. Boats come and go, waiters set the rooftop tables, swimmers glide across the infinity pool, the ferry crosses the bay. Warm Mediterranean sunlight, glossy turquoise water, terracotta and lemon-yellow textures, sea spray, fast sweeping drone moves and tracking shots.</pre>
+        <span class="label">A direction the agent sent</span>
+        <pre style="white-space: pre-wrap">From 0 to 8 seconds, night falls over the harbour, lanterns glow on the Terra rooftop.</pre>
+      </div>
+    </div>
+    <div class="table" style="max-width:720px">
+      <table>
+        <tr><th>Timing on a MacBook</th><th>Time</th></tr>
+        <tr><td>Building the world, done once</td><td class="num">about 2 min</td></tr>
+        <tr><td>Starting the video for an ad break</td><td class="num">about 15 s</td></tr>
+        <tr><td>A direction showing up on screen</td><td class="num">4–8 s</td></tr>
+        <tr><td>The answer starting after you stop talking</td><td class="num">3–5 s</td></tr>
+      </table>
     </div>
   </div>
 </section>
@@ -406,12 +329,12 @@ footer .wrap { display: grid; gap: 8px; }
     <div style="display:grid; gap:14px">
       <span class="label">Run it</span>
       <h2>On a Mac, nothing to plug in.</h2>
-      <p class="lede">You need Node.js 20+, Python 3.11+, an AssemblyAI key and a Reactor key.</p>
+      <p class="lede">You need Node.js 20+, Python 3.11+, an AssemblyAI API key and a Reactor API key.</p>
       <ol class="run">
         <li>Open <code>localhost:3000/notflix</code> and click <b>Play</b>.</li>
         <li>Click <b>Prepare ad</b>, then <b>Start the ad</b> when it lights up.</li>
-        <li><b>Hold Space</b>, ask, release.</li>
-        <li><b>Esc</b> skips the ad. <b>D</b> opens the audio check.</li>
+        <li><b>Hold Space</b>, ask a question, let go.</li>
+        <li><b>Esc</b> skips the ad. <b>D</b> opens an audio check.</li>
       </ol>
     </div>
 <pre><span class="c"># install</span>
@@ -430,8 +353,8 @@ npm run dev</pre>
 
 <footer>
   <div class="wrap">
-    <p>Built at an AssemblyAI hackathon with the AssemblyAI Voice Agent and Reactor’s HappyOyster world model.</p>
-    <p>Hilton Amalfi Coast, its prices and its facts are fictional, written for this demo. Big Buck Bunny © Blender Foundation, CC BY 3.0.</p>
+    <p>Made at an AssemblyAI hackathon with AssemblyAI’s Voice Agent and Reactor’s HappyOyster.</p>
+    <p>The Hilton stay, its prices and its details are made up for this demo; Hilton isn’t involved. Big Buck Bunny © Blender Foundation, CC BY 3.0.</p>
   </div>
 </footer>
 </body>
