@@ -5,9 +5,6 @@ app. At the ad break, a live AI-generated world of the Amalfi Coast plays with a
 scripted narration. Hold Space and ask it something. The narration stops, a voice
 agent answers in the same voice, and the picture changes to show you.
 
-It runs on a Mac with nothing else plugged in: the built-in microphone and
-speakers are enough.
-
 ![The Hilton Amalfi Coast ad answering a price question, with a fact card](docs/screenshots/13-answer.jpg)
 
 Project page: **[jaidevshriram.com/ad-responder](https://jaidevshriram.com/ad-responder/)** (GitHub Pages, from `docs/`).
