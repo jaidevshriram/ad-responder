@@ -10,7 +10,7 @@ speakers are enough.
 
 ![The Hilton Amalfi Coast ad answering a price question, with a fact card](docs/screenshots/13-answer.jpg)
 
-Project page: [docs/index.html](docs/index.html) (served with GitHub Pages).
+Project page: **[jaidevshriram.com/ad-responder](https://jaidevshriram.com/ad-responder/)** (GitHub Pages, from `docs/`).
 
 ## What happens
 
